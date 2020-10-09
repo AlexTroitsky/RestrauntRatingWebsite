@@ -1,0 +1,69 @@
+﻿@font-face {
+    font-family: 'ProjectFont';
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/redhattext/v1/RrQXbohi_ic6B3yVSzGBrMxQaKct.woff2) format('woff2');
+}
+
+.suggest-txt {
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+}
+
+#canvas-logo {
+    -webkit-transition: -webkit-transform .8s ease-in-out;
+    transition: transform .8s ease-in-out;
+}
+
+#canvas-logo:hover {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+
+.header-text {
+    text-shadow: #e0e0e0 2px 2px 0;
+}
+
+.good-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: forestgreen;
+}
+
+.avg-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: gold;
+}
+
+.bad-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+}
+
+body {
+    font-family: ProjectFont, sans-serif;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
