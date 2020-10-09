@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace RestaurantRating
 {
@@ -29,6 +30,10 @@ namespace RestaurantRating
 
             services.AddDbContext<RestaurantRatingContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RestaurantRatingContext")));
+
+            services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(10));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +53,7 @@ namespace RestaurantRating
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
