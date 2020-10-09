@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -69,22 +70,16 @@ namespace RestaurantRating.Models
             return View(await _context.User.ToListAsync());
         }
 
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize(Roles = "Admin")]
+        // GET: Users/Search
+        public ActionResult Search([Bind("Username,UserType")] User user)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(user.Username) && string.IsNullOrEmpty(user.UserType.ToString()))
             {
-                return NotFound();
+                return View("Index", _context.User.ToList());
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            return View("Index", _context.User.Where(u => u.UserType.Equals(user.UserType) || u.Username.Contains(user.Username)));
         }
 
         // GET: Users/Create
@@ -110,6 +105,7 @@ namespace RestaurantRating.Models
         }
 
         // GET: Users/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,9 +124,10 @@ namespace RestaurantRating.Models
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Username,Email,Password,isAdmin")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Password,UserType")] User user)
         {
             if (id != user.Id)
             {
@@ -161,6 +158,7 @@ namespace RestaurantRating.Models
         }
 
         // GET: Users/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -179,6 +177,7 @@ namespace RestaurantRating.Models
         }
 
         // POST: Users/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -189,7 +188,6 @@ namespace RestaurantRating.Models
             return RedirectToAction(nameof(Index));
         }
 
-       
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
