@@ -65,6 +65,7 @@ namespace RestaurantRating.Models
         }
 
         // GET: Users
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.User.ToListAsync());
@@ -95,11 +96,20 @@ namespace RestaurantRating.Models
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,Password")] User user)
         {
-            if (ModelState.IsValid)
+            if (_context.User.Where(c => c.Username.Equals(user.Username)).Count() > 0)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.ErrMsg = "User name already exists, please try again";
+            }
+            else
+            {
+                user.UserType = UserType.Reveiwer;
+                ModelState.Remove(nameof(user.UserType));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Home");
+                }
             }
             return View(user);
         }
