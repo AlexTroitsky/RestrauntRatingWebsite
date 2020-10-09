@@ -15,5 +15,9 @@ namespace RestaurantRating.Data
         }
 
         public DbSet<RestaurantRating.Models.Restaurant> Restaurant { get; set; }
+
+        public DbSet<RestaurantRating.Models.User> User { get; set; }
+
+        public DbSet<RestaurantRating.Models.Review> Review { get; set; }
     }
 }
