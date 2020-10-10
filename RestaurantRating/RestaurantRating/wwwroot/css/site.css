@@ -84,12 +84,6 @@ textarea {
     padding: 2px 16px;
 }
 
-.container {
-    height: 200px;
-    position: relative;
-    border: 3px solid green;
-}
-
 .center {
     margin: 0;
     position: absolute;
