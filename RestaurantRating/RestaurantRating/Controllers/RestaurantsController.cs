@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace RestaurantRating.Models
         }
 
         // GET: Restaurants
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Restaurant.ToListAsync());
@@ -41,22 +43,32 @@ namespace RestaurantRating.Models
 
             return View(restaurant);
         }
-
+        
         // GET: Restaurants/Create
         public IActionResult Create()
         {
             return View();
         }
 
+
+
+
         // POST: Restaurants/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,City,Address")] Restaurant restaurant)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,ImageFile")] Restaurant restaurant)
         {
+
             if (ModelState.IsValid)
             {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    restaurant.ImageFile.CopyTo(ms);
+                    restaurant.Image = ms.ToArray();
+                }
+
                 _context.Add(restaurant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -85,7 +97,7 @@ namespace RestaurantRating.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceLevel,City,Address")] Restaurant restaurant)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceLevel,Rating,City,Address, Image")] Restaurant restaurant)
         {
             if (id != restaurant.Id)
             {

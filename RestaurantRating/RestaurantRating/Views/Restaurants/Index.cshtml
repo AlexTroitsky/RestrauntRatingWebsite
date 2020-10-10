@@ -1,59 +1,185 @@
 ﻿@model IEnumerable<RestaurantRating.Models.Restaurant>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "";
+    Boolean isLoggedIn = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value != null;
+    Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
 }
+<h2 class="header-text">@ViewBag.Title</h2>
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriceLevel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PriceLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+
+<div class="row">
+    <form class="col s12">
+        <div class="row">
+            <div class="input-field col s3">
+                <i class="material-icons prefix">restaurant</i>
+                <input id="icon_restaurant" type="text" class="validate">
+                <label for="icon_restaurant">Name</label>
+            </div>
+            <div class="input-field col s3">
+                <i class="material-icons prefix">stars</i>
+                <input id="rating_range" type="number" min="0" max="5" class="validate">
+                <label for="rating_range">Rating</label>
+            </div>
+            <div class="input-field col s3">
+                <i class="material-icons prefix">$</i>
+                <input id="price_range" min="0" max="5" type="number" class="validate">
+                <label for="price_range">Price</label>
+            </div>
+            <div class="input-field col s3">
+                <button type="submit" class="waves-effect waves-light btn"><i class="material-icons left">search</i>Search</button>
+            </div
+</form>
+</div>
+
+<hr />
+
+
+<div class="row">
+    <div class="card-deck">
+
+        @foreach (var restaurant in Model)
+        {
+            @if (restaurant.Image != null)
+            {
+                String img = Convert.ToBase64String(restaurant.Image);
+                <div class="col s4 m4">
+                    <div class="card small">
+                        <div class="card-image">
+                            <a asp-action="Details">
+                                <img class="rounded-circle" src="data:image/png;base64,@img">
+                                <span class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</span>
+                            </a>
+
+                        </div>
+
+                        <div class="card-stacked">
+
+                            <div class="card-content">
+                                <div class="row">
+
+                                    <div class="col s6">@restaurant.Description</div>
+                                    <div class="col s6">
+
+                                        <a asp-action="Details" class="btn-small waves-effect waves-light blue"><i class="material-icons">info_outline</i></a>
+
+                                        @if (isManager)
+                                        {
+                                            <a asp-action="Delete" class="btn-small waves-effect waves-light red"><i class="material-icons">delete_forever</i></a>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-action">
+                                <div class="left">
+                                    @for (int i = 0; i < restaurant.Rating; i++)
+                                    {
+                                        <i class="material-icons">star</i>
+                                    }
+                                    @for (int i = 0; i < 5 - restaurant.Rating; i++)
+                                    {
+                                        <i class="material-icons">star_border</i>
+                                    }
+
+                                </div>
+                                <div class="right">
+                                    @for (int i = 0; i < restaurant.PriceLevel; i++)
+                                    {
+                                        <i class="material-icons">$</i>
+                                    }
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+        }
+        @if (isLoggedIn && isManager)
+        {
+            <div class="col s4 m4 align-items-center">
+                <div class="card-panel">
+                        <div class="container">
+                            <div class="center">
+                            <a asp-action="Create" class="btn-large waves-effect waves-light blue"><i class="material-icons">add</i></a>
+                            </div>
+                        </div>
+                 </div>
+            </div>
+        }
+    </div>
+
+
+<hr />
+
+
+<div>
+    <div id="ratings-chart" style="height: 370px; width: 100%;"></div>
+    <div class="row">
+        <div id="genre-chart" class="element1 col-md-5"></div>
+        <div id="director-chart" class="element2 col-md-7"></div>
+    </div>
+
+    @*<script type="text/javascript">$(document).ready(() => {
+                getAjaxData('GetGenreData', (response) =>
+                    drawChart(response, 'Genre', 'genre-chart'));
+                getAjaxData('GetDirectorData', (response) =>
+                    drawChart(response, 'Director', 'director-chart'));
+            });
+
+            function getAjaxData(functionName, callback) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '/Movie/' + functionName,
+                    success: (response) => {
+                        callback(response);
+                    }
+                })
+            }
+
+            // Draw the chart and set the chart values
+            function drawChart(chartData, name, elementId) {
+                google.charts.setOnLoadCallback(() => {
+                    var displayName = name + 's';
+                    var data = google.visualization.arrayToDataTable([
+                        [name, 'Movies'], ...chartData.map(({ label, amount }) => [label, amount])
+                    ]);
+
+                    // Optional; add a title and set the width and height of the chart
+                    var options = { 'title': name + 's', 'width': 550, 'height': 400 };
+
+                    // Display the chart inside the <div> element with id="Directors"
+                    var chart = new google.visualization.PieChart(document.getElementById(elementId));
+                    chart.draw(data, options);
+                })
+            }</script>
+
+        <script>
+            window.onload = function () {
+                var chart = new CanvasJS.Chart("ratings-chart", {
+                    animationEnabled: true,
+                    theme: "light2",
+                    title: {
+                        text: "Movie Ratings"
+                    },
+                    axisY: {
+                        includeZero: false
+                    },
+                    data: [{
+                        type: "line",
+                        dataPoints:
+                        @Html.Raw(Json.Encode(@ViewBag.movieRating))
+                    }]
+                });
+                chart.render();
+            }
+        </script>*@
+
+</div>
