@@ -24,6 +24,24 @@
     text-shadow: #e0e0e0 2px 2px 0;
 }
 
+.good-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: forestgreen;
+}
+
+.avg-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: gold;
+}
+
+.bad-movie {
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+}
+
 body {
     font-family: ProjectFont, sans-serif;
     padding-top: 50px;
@@ -36,8 +54,8 @@ body {
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists
-   will truncate terms that are too long to fit in the left column
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
 */
 .dl-horizontal dt {
     white-space: normal;
@@ -64,6 +82,12 @@ textarea {
 /* Add some padding inside the card container */
 .container {
     padding: 2px 16px;
+}
+
+.container {
+    height: 200px;
+    position: relative;
+    border: 3px solid green;
 }
 
 .center {

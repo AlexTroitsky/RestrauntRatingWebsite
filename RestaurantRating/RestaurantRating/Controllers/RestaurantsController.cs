@@ -20,13 +20,10 @@ namespace RestaurantRating.Models
         }
 
         // GET: Restaurants
-        public async Task<IActionResult> Index(string Name = "", int Rating = 0, int Price = 0)
+        
+        public async Task<IActionResult> Index()
         {
-            var showedRestaurants = _context.Restaurant
-                   .Where(restaurant => restaurant.Name.Contains(Name) || Name == null)
-                   .Where(restaurant => restaurant.Rating == Rating || Rating == 0)
-                   .Where(restaurant => restaurant.PriceLevel == Price || Price == 0);
-            return View(await showedRestaurants.ToListAsync());
+            return View(await _context.Restaurant.ToListAsync());
         }
 
         // GET: Restaurants/Details/5
@@ -46,18 +43,24 @@ namespace RestaurantRating.Models
 
             return View(restaurant);
         }
-
+        
         // GET: Restaurants/Create
         public IActionResult Create()
         {
             return View();
         }
 
+
+
+
         // POST: Restaurants/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,ImageFile")] Restaurant restaurant)
         {
+
             if (ModelState.IsValid)
             {
                 using (MemoryStream ms = new MemoryStream())
@@ -90,6 +93,8 @@ namespace RestaurantRating.Models
         }
 
         // POST: Restaurants/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceLevel,Rating,City,Address, Image")] Restaurant restaurant)
