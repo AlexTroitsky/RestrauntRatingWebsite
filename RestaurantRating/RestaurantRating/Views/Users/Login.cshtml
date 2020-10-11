@@ -23,7 +23,7 @@
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-primary" />
             </div>
-            <div class="col-md-10">
+            <div class="form-group">
                 <div style="color: red;font-weight:900;">@ViewBag.ErrMsg</div>
             </div>
 
@@ -33,3 +33,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
