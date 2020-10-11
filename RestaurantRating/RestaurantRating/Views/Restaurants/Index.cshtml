@@ -10,21 +10,21 @@
 
 
 <div class="row">
-    <form class="col s12">
+    <form class="col s12" asp-action="Index">
         <div class="row">
             <div class="input-field col s3">
                 <i class="material-icons prefix">restaurant</i>
-                <input id="icon_restaurant" type="text" class="validate">
+                <input id="icon_restaurant" name="Name" type="text" class="validate">
                 <label for="icon_restaurant">Name</label>
             </div>
             <div class="input-field col s3">
                 <i class="material-icons prefix">stars</i>
-                <input id="rating_range" type="number" min="0" max="5" class="validate">
+                <input id="rating_range" name="Rating" type="number" min="0" max="5" class="validate">
                 <label for="rating_range">Rating</label>
             </div>
             <div class="input-field col s3">
                 <i class="material-icons prefix">$</i>
-                <input id="price_range" min="0" max="5" type="number" class="validate">
+                <input id="price_range" name="Price" min="0" max="5" type="number" class="validate">
                 <label for="price_range">Price</label>
             </div>
             <div class="input-field col s3">
@@ -119,61 +119,5 @@
         <div id="genre-chart" class="element1 col-md-5"></div>
         <div id="director-chart" class="element2 col-md-7"></div>
     </div>
-
-    @*<script type="text/javascript">$(document).ready(() => {
-                getAjaxData('GetGenreData', (response) =>
-                    drawChart(response, 'Genre', 'genre-chart'));
-                getAjaxData('GetDirectorData', (response) =>
-                    drawChart(response, 'Director', 'director-chart'));
-            });
-
-            function getAjaxData(functionName, callback) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: '/Movie/' + functionName,
-                    success: (response) => {
-                        callback(response);
-                    }
-                })
-            }
-
-            // Draw the chart and set the chart values
-            function drawChart(chartData, name, elementId) {
-                google.charts.setOnLoadCallback(() => {
-                    var displayName = name + 's';
-                    var data = google.visualization.arrayToDataTable([
-                        [name, 'Movies'], ...chartData.map(({ label, amount }) => [label, amount])
-                    ]);
-
-                    // Optional; add a title and set the width and height of the chart
-                    var options = { 'title': name + 's', 'width': 550, 'height': 400 };
-
-                    // Display the chart inside the <div> element with id="Directors"
-                    var chart = new google.visualization.PieChart(document.getElementById(elementId));
-                    chart.draw(data, options);
-                })
-            }</script>
-
-        <script>
-            window.onload = function () {
-                var chart = new CanvasJS.Chart("ratings-chart", {
-                    animationEnabled: true,
-                    theme: "light2",
-                    title: {
-                        text: "Movie Ratings"
-                    },
-                    axisY: {
-                        includeZero: false
-                    },
-                    data: [{
-                        type: "line",
-                        dataPoints:
-                        @Html.Raw(Json.Encode(@ViewBag.movieRating))
-                    }]
-                });
-                chart.render();
-            }
-        </script>*@
 
 </div>

@@ -21,9 +21,14 @@ namespace RestaurantRating.Models
 
         // GET: Restaurants
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string Name = "", int Rating = 0, int Price = 0)
         {
-            return View(await _context.Restaurant.ToListAsync());
+            // Filter movies
+            var showedMovies = _context.Restaurant
+                   .Where(restaurant => restaurant.Name.Contains(Name) || Name == null)
+                   .Where(restaurant => restaurant.Rating == Rating || Rating == 0)
+                   .Where(restaurant => restaurant.PriceLevel == Price || Price == 0);
+            return View(await showedMovies.ToListAsync());
         }
 
         // GET: Restaurants/Details/5
