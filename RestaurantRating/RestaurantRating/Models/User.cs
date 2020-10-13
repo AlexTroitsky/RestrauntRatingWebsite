@@ -19,6 +19,8 @@ namespace RestaurantRating.Models
         [Required(ErrorMessage = "Password is required", AllowEmptyStrings = false)]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
         public string Password { get; set; }
-        public UserType UserType { get; set; }
+        [Display(Name = "Type")]
+        [Required(ErrorMessage = "Type is required")]
+        public UserType? UserType { get; set; }
     }
 }
