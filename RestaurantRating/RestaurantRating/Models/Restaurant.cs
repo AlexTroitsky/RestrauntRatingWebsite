@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +16,18 @@ namespace RestaurantRating.Models
         public string Description { get; set; }
         [Range(1, 5)]
         public int PriceLevel { get; set; }
+        [Range(1, 5)]
+        public int Rating { get; set; }
+
         [Required]
         public string City { get; set; }
 
         [Required]
         public string Address { get; set; }
-        // public byte[] image { get; set; }
-}
+
+        public byte[] Image { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+    }
 }

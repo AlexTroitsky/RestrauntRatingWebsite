@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RestaurantRating</title>
 
-
-
-    <link href="~/css/site.css" rel="stylesheet"/>
+    <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/css/bootstrap.css" rel="stylesheet">
-    <link href="~/css/bootstrap-theme.css" rel="stylesheet">
     <link rel="icon" href="~/Content/Images/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 
     <script src="~/Scripts/jquery-1.10.2.js"></script>
 
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        // Load the Visualization API and the corechart package.
-        google.charts.load('current', { 'packages': ['corechart', 'gauge'] });
-    </script>
+    <script type="text/javascript">// Load the Visualization API and the corechart package.
+        google.charts.load('current', { 'packages': ['corechart', 'gauge'] });</script>
 </head>
 
-@{ 
+@{
     Boolean isLoggedIn = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value != null;
     Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
 }
@@ -45,7 +46,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav" style="width: 80%">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Restraunts", "Index", "Restraunts")</li>
+                    <li>@Html.ActionLink("Restaurants", "Index", "Restaurants")</li>
 
                     @if (isManager)
                     {
@@ -68,7 +69,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Alex Gay</p>
+            <p>&copy; @DateTime.Now.Year - RestRate</p>
         </footer>
     </div>
 
@@ -82,7 +83,7 @@
             var ctx = canvas[0].getContext("2d");
             ctx.strokeStyle = "yellow";
             ctx.font = "24px Verdanas";
-            ctx.strokeText("Alex Gay", 0, 33);
+            ctx.strokeText("RestRate", 0, 33);
         })
     </script>
 

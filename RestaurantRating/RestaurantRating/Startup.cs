@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Runtime.InteropServices;
 
 namespace RestaurantRating
 {
@@ -28,7 +29,11 @@ namespace RestaurantRating
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<RestaurantRatingContext>(options =>
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                services.AddDbContext<RestaurantRatingContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AlexMacConnection")));
+            else
+                services.AddDbContext<RestaurantRatingContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RestaurantRatingContext")));
 
             services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(10));
