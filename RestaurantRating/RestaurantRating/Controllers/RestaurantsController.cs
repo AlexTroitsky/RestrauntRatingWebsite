@@ -20,15 +20,13 @@ namespace RestaurantRating.Models
         }
 
         // GET: Restaurants
-        
         public async Task<IActionResult> Index(string Name = "", int Rating = 0, int Price = 0)
         {
-            // Filter movies
-            var showedMovies = _context.Restaurant
+            var showedRestaurants = _context.Restaurant
                    .Where(restaurant => restaurant.Name.Contains(Name) || Name == null)
                    .Where(restaurant => restaurant.Rating == Rating || Rating == 0)
                    .Where(restaurant => restaurant.PriceLevel == Price || Price == 0);
-            return View(await showedMovies.ToListAsync());
+            return View(await showedRestaurants.ToListAsync());
         }
 
         // GET: Restaurants/Details/5
@@ -59,8 +57,6 @@ namespace RestaurantRating.Models
 
 
         // POST: Restaurants/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,ImageFile")] Restaurant restaurant)
@@ -98,8 +94,6 @@ namespace RestaurantRating.Models
         }
 
         // POST: Restaurants/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceLevel,Rating,City,Address, Image")] Restaurant restaurant)

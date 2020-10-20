@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,7 +28,6 @@ namespace RestaurantRating.Models
 
         public byte[] Image { get; set; }
 
-        
         [NotMapped]
         public IFormFile ImageFile { get; set; }
     }
