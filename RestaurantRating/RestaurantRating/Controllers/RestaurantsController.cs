@@ -46,18 +46,22 @@ namespace RestaurantRating.Models
 
             return View(restaurant);
         }
-
+        
         // GET: Restaurants/Create
         public IActionResult Create()
         {
             return View();
         }
 
+
+
+
         // POST: Restaurants/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,ImageFile")] Restaurant restaurant)
         {
+
             if (ModelState.IsValid)
             {
                 using (MemoryStream ms = new MemoryStream())
