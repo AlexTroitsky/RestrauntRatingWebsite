@@ -22,14 +22,14 @@ namespace RestaurantRating.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new User
+            modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
                 Username = "test",
                 Password = "1234",
                 UserType = UserType.Admin
 
-            };
+            });
         }
     }
 }
