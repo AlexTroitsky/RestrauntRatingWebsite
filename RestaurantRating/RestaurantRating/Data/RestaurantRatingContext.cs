@@ -19,5 +19,17 @@ namespace RestaurantRating.Data
         public DbSet<RestaurantRating.Models.User> User { get; set; }
 
         public DbSet<RestaurantRating.Models.Review> Review { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            new User
+            {
+                Id = 1,
+                Username = "test",
+                Password = "1234",
+                UserType = UserType.Admin
+
+            };
+        }
     }
 }
