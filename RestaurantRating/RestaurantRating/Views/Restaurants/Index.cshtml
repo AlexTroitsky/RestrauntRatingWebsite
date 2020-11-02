@@ -1,0 +1,118 @@
+﻿@model IEnumerable<RestaurantRating.Models.Restaurant>
+@{
+    ViewData["Title"] = "";
+    Boolean isLoggedIn = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value != null;
+    Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
+}
+<h2 class="header-text">@ViewBag.Title</h2>
+
+
+
+
+<div class="row">
+    <form class="col s12" asp-action="Index">
+        <div class="row">
+            <div class="input-field col s3">
+                <i class="material-icons prefix">restaurant</i>
+                <input id="icon_restaurant" name="Name" type="text" class="validate">
+                <label for="icon_restaurant">Name</label>
+            </div>
+            <div class="input-field col s3">
+                <i class="material-icons prefix">stars</i>
+                <input id="rating_range" name="Rating" type="number" min="0" max="5" class="validate">
+                <label for="rating_range">Rating</label>
+            </div>
+            <div class="input-field col s3">
+                <i class="material-icons prefix">$</i>
+                <input id="price_range" name="Price" min="0" max="5" type="number" class="validate">
+                <label for="price_range">Price</label>
+            </div>
+            <div class="input-field col s3">
+                <button type="submit" class="waves-effect waves-light btn"><i class="material-icons left">search</i>Search</button>
+            </div>
+</form>
+</div>
+
+<hr />
+
+
+<div class="row">
+    <div class="card-deck">
+
+        @foreach (var restaurant in Model)
+        {
+            @if (restaurant.Image != null)
+            {
+                String img = Convert.ToBase64String(restaurant.Image);
+                <div class="col s4 m4">
+                    <div class="card small">
+                        <div class="card-image">
+                            <a asp-action="Details" asp-route-id="@restaurant.Id">
+                                <img class="rounded-circle" src="data:image/png;base64,@img">
+                                <span class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</span>
+                                @if (isManager)
+                                {
+
+
+                                        <a asp-action="Delete" asp-route-id="@restaurant.Id" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete_forever</i></a>
+
+                                }
+                            </a>
+
+                        </div>
+
+                        <div class="card-stacked">
+
+                            <div class="card-content">
+
+                                    <p>@restaurant.Description</p>
+
+                            </div>
+
+
+                            <div class="card-action">
+                                <div class="left">
+                                    @for (int i = 0; i < restaurant.Rating; i++)
+                                    {
+                                        <i class="material-icons">star</i>
+                                    }
+                                    @for (int i = 0; i < 5 - restaurant.Rating; i++)
+                                    {
+                                        <i class="material-icons">star_border</i>
+                                    }
+
+                                </div>
+                                <div class="right">
+                                    @for (int i = 0; i < restaurant.PriceLevel; i++)
+                                    {
+                                        <i class="material-icons">$</i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+        }
+        @if (isLoggedIn && isManager)
+        {
+            <div class="col s4 m4">
+                <div class="card-panel">
+                    <div class="text-center">
+                        <a asp-action="Create" class="btn-large waves-effect waves-light blue"><i class="material-icons">add</i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+<div>
+    <div id="ratings-chart" style="height: 370px; width: 100%;"></div>
+    <div class="row">
+        <div id="genre-chart" class="element1 col-md-5"></div>
+        <div id="director-chart" class="element2 col-md-7"></div>
+    </div>
+
+</div>
