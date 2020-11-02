@@ -10,18 +10,17 @@ namespace RestaurantRating.Models
     public class Review
     {
         public int Id { get; set; }
-        
-        [MaxLength(100)]
-        [Required]
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        [ForeignKey("Restaurant")]
+        public int RestaurantId { get; set; }
+        [DataType(DataType.MultilineText)]
         public string Content { get; set; }
-        [Range(1, 5)]
-        [Required]
+        [Range(1, 10)]
         public int Stars { get; set; }
         public DateTime Date { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
-        public int RestaurantId { get; set; }
-        public Restaurant Restaurant { get; set; }
 
+        public virtual User User { get; set; }
+        public virtual Restaurant Restaurant { get; set; }
     }
 }

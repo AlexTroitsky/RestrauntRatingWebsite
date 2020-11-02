@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -109,7 +108,6 @@ namespace RestaurantRating.Models
                 {
                     _context.Add(user);
                     await _context.SaveChangesAsync();
-                    SignIn(user);
                     return RedirectToAction("Index", "Home");
                 }
             }

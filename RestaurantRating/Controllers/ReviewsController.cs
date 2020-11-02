@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
-using RestaurantRating.Migrations;
 using RestaurantRating.Models;
 
 namespace RestaurantRating.Controllers
@@ -24,25 +22,8 @@ namespace RestaurantRating.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var reviews = await _context.Review.Include(o => o.Restaurant).ToListAsync();
-            return View(reviews);
-        }
-
-        // GET: ReviewsOfRestaurant
-        public async Task<IActionResult> IndexOfRestaurant(int id)
-        {
-            var reviews = await _context.Review
-                .Where(r => r.RestaurantId == id)
-                //.Include(o => o.Restaurant)
-                .ToListAsync();
-                return Json(reviews);
-        }
-
-        //Search
-        public async Task<IActionResult> Search(string RestaurantName)
-        {
-            var reviews = await _context.Review.Where(r => r.Restaurant.Name.Contains(RestaurantName)).Include(o => o.Restaurant).ToListAsync();
-            return View("Index", reviews);
+            var restaurantRatingContext = _context.Review.Include(r => r.Restaurant).Include(r => r.User);
+            return View(await restaurantRatingContext.ToListAsync());
         }
 
         // GET: Reviews/Details/5
@@ -54,6 +35,8 @@ namespace RestaurantRating.Controllers
             }
 
             var review = await _context.Review
+                .Include(r => r.Restaurant)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {
@@ -64,33 +47,28 @@ namespace RestaurantRating.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create(int id = -1)
+        public IActionResult Create()
         {
-            Restaurant restaurant = _context.Restaurant.Find(id);
-            ViewBag.restaurant = restaurant;
-            //ViewBag.Restaurants = new SelectList(_context.Restaurant.ToList(), "Id", "Name");
-            Review review = new Review();
-            review.Restaurant = restaurant;
-            return View(review);
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Address");
+            ViewData["UserId"] = new SelectList(_context.User, "ID", "Email");
+            return View();
         }
 
-        
         // POST: Reviews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,UserId,RestaurantId,Content,Stars,Date")] Review review)
         {
             if (ModelState.IsValid)
             {
-                review.Date = DateTime.Now;
-                review.Restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
-                review.User = _context.User.First(u => u.Id == review.UserId);
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Address", review.RestaurantId);
+            ViewData["UserId"] = new SelectList(_context.User, "ID", "Email", review.UserId);
             return View(review);
         }
 
@@ -107,6 +85,8 @@ namespace RestaurantRating.Controllers
             {
                 return NotFound();
             }
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Address", review.RestaurantId);
+            ViewData["UserId"] = new SelectList(_context.User, "ID", "Email", review.UserId);
             return View(review);
         }
 
@@ -115,7 +95,7 @@ namespace RestaurantRating.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,Date")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RestaurantId,Content,Stars,Date")] Review review)
         {
             if (id != review.Id)
             {
@@ -142,6 +122,8 @@ namespace RestaurantRating.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Address", review.RestaurantId);
+            ViewData["UserId"] = new SelectList(_context.User, "ID", "Email", review.UserId);
             return View(review);
         }
 
@@ -154,6 +136,8 @@ namespace RestaurantRating.Controllers
             }
 
             var review = await _context.Review
+                .Include(r => r.Restaurant)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (review == null)
             {

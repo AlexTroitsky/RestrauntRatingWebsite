@@ -31,7 +31,7 @@ namespace RestaurantRating
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 services.AddDbContext<RestaurantRatingContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AlexMacConnection")));
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             else
                 services.AddDbContext<RestaurantRatingContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RestaurantRatingContext")));
@@ -66,7 +66,7 @@ namespace RestaurantRating
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Restaurants}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

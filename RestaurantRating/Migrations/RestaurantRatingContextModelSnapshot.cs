@@ -63,9 +63,7 @@ namespace RestaurantRating.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -123,7 +121,7 @@ namespace RestaurantRating.Migrations
             modelBuilder.Entity("RestaurantRating.Models.Review", b =>
                 {
                     b.HasOne("RestaurantRating.Models.Restaurant", "Restaurant")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
