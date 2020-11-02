@@ -1,0 +1,48 @@
+﻿@model RestaurantRating.Models.Review
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Add Review about <b>@ViewBag.restaurant.Name</b></h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="RestaurantId" hidden value="@ViewBag.restaurant.Id" />
+            @*to delete*@
+            <input asp-for="UserId" hidden value="1" />
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" placeholder="Tell us what you think" autocomplete="off" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stars" class="control-label"></label>
+                <input asp-for="Stars" class="form-control" placeholder="Stars (From 1 to 5)" value="" />
+                <span asp-validation-for="Stars" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" /> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*<script>
+    $(function () {
+        $('#submit').click(function () {
+            $.post({
+                url: "~/Reviews/Create",
+                data: { Content: $('#content').val(), Stars: $('#stars').val(), Restaurant: @ViewBag.restaurant}
+            })
+        });
+    });
+</script>*@
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

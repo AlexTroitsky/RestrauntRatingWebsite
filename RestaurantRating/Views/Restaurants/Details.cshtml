@@ -1,0 +1,221 @@
+﻿@model RestaurantRating.Models.Restaurant
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Restaurant</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PriceLevel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PriceLevel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit Restaurant</a> |*@
+    <a asp-action="Index" class="btn btn-success">Back to List</a>
+</div>
+<hr />
+<h4>Reviews</h4>
+<div style=" height:500px; overflow:auto;">
+    <table class="table sortable">
+        <thead>
+            <tr>
+                <th>
+                    User name
+                </th>
+                <th>
+                    Review
+                </th>
+                <th>
+                    Rating
+                </th>
+                <th>
+                    Review date
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="reviewsBody">
+            @*@foreach (var item in Model.Reviews)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Username)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Content)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stars)/5
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }*@
+        </tbody>
+    </table>
+</div>
+<hr/>
+@* Add Review *@
+<div>
+    <h4>Add Review</h4>
+    <div>
+        <textarea class="form-control" id="addReviewContent" maxlength="100" placeholder="Tell us what you think"></textarea>
+        <b><span class="text-danger" id="contentMessage">This field is required</span></b>
+    </div>
+    <br />
+    <div>
+        <select class="form-control" id="addReviewStars">
+            <option value="" disabled selected>Rating (From 1 to 5)</option>
+            <option value="5">5 Excellent</option>
+            <option value="4">4 Above Average</option>
+            <option value="3">3 Average</option>
+            <option value="2">2 Below Average</option>
+            <option value="1">1 Poor</option>
+        </select>
+        <b><span class="text-danger" id="ratingMessage">This field is required</span></b>
+    </div>
+    <br />
+    <div>
+        <input type="submit" value="Submit Review" class="btn btn-success" id="addReview" />
+    </div>
+</div>
+<br />
+
+<script>
+    $(document).ready(() => {
+        var contentMessage = document.getElementById('contentMessage');
+        contentMessage.hidden = true;
+        var ratingMessage = document.getElementById('ratingMessage');
+        ratingMessage.hidden = true;
+        var reviewsBody = document.getElementById('reviewsBody');
+        var temp = [
+            { "id": 3, "content": "Very good", "stars": 5, "date": "2020-10-16T00:00:00", "userId": 2, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 4, "content": "Aaa", "stars": 3, "date": "2020-10-31T00:00:00", "userId": 3, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 7, "content": "4", "stars": 4, "date": "2020-11-02T12:39:54.7524078", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 8, "content": "4", "stars": 4, "date": "2020-11-02T12:40:16.9163185", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 9, "content": "333", "stars": 5, "date": "2020-11-02T13:52:51.9819847", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 10, "content": "ssssssssssssss", "stars": 1, "date": "2020-11-02T14:54:19.7502237", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 11, "content": "ssssssssssssss", "stars": 1, "date": "2020-11-02T14:54:39.409033", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 12, "content": "s", "stars": 5, "date": "2020-11-02T15:01:18.9924342", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null },
+            { "id": 13, "content": "lllll", "stars": 5, "date": "2020-11-02T15:42:55.4036305", "userId": 1, "user": null, "restaurantId": 2, "restaurant": null }
+        ];
+
+        buildTable();
+
+        function createNewReview() {
+            $.post({
+                url: "/Reviews/create",
+                data: {
+                    Content: $('#addReviewContent').val(),
+                    Stars: $('#addReviewStars').val(),
+                    UserId: "1",
+                    RestaurantId: location.href.substr(location.href.lastIndexOf('/') + 1)
+                }
+            }).done(function () {
+                buildTable();
+                document.getElementById("addReviewContent").value = "";
+                document.getElementById("addReviewStars").value = "";
+                contentMessage.hidden = true;
+                ratingMessage.hidden = true;
+            });
+        };
+
+        $('#addReview').click(function () {
+            contentMessage.hidden = true;
+            ratingMessage.hidden = true;
+            if ((!(document.getElementById("addReviewContent") && document.getElementById("addReviewContent").value))
+                || (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value))) {
+                if ((!(document.getElementById("addReviewContent") && document.getElementById("addReviewContent").value))
+                    && (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value))) {
+                    contentMessage.hidden = false;
+                    ratingMessage.hidden = false;
+                }
+                else if (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value)) {
+                    ratingMessage.hidden = false;
+                }
+                else {
+                    contentMessage.hidden = false;
+                }
+            }
+            else {
+                createNewReview();
+            }
+        });
+
+        function buildTable() {
+            $.ajax({
+                url: "/Reviews/IndexOfRestaurant/" + location.href.substr(location.href.lastIndexOf('/') + 1),
+                success: function (data) {
+                    var result = JSON.stringify(data);
+                    result = JSON.parse(result);
+                    reviewsBody.innerHTML = "";
+                    for (var i = 0; i < result.length; i++) {
+                        var starsHtml = "";
+                        switch (result[i].stars) {
+                            case 1:
+                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
+                                break;
+                            case 2:
+                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
+                                break;
+                            case 3:
+                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
+                                break;
+                            case 4:
+                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i>";
+                                break;
+                            case 5:
+                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i>";
+                                break;
+                        }
+                        reviewsBody.innerHTML = reviewsBody.innerHTML + "<tr><td>" + result[i].userId +
+                            "</td><td>" + result[i].content +
+                            "</td><td>" + starsHtml +
+                            "</td><td>" + (result[i].date).toString().slice(0, 10) +
+                            "</td></tr>";
+                    };
+                }
+            });
+        };
+    });
+</script>

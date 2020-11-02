@@ -1,0 +1,69 @@
+﻿@model IEnumerable<RestaurantRating.Models.Review>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Reviews</h1>
+
+@*<p>
+    <a asp-action="Create">Add Review</a>
+</p>*@
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Search">
+            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            <div class="form-group">
+                <input name="RestaurantName" class="form-control" placeholder="Searching by restaurant name" autocomplete="off" />
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="Content" class="control-label"></label>
+                    <input asp-for="Content" class="form-control" placeholder="Tell us what you think" autocomplete="off" />
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Stars" class="control-label"></label>
+                    <input asp-for="Stars" class="form-control" placeholder="Stars (From 1 to 5)" />
+                    <span asp-validation-for="Stars" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" /> |
+                <a asp-action="Index" class="btn btn-primary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<table class="table sortable" id="ReviewsTable">
+    <thead>
+        <tr>
+            <th>Restaurant</th>
+            <th>User name</th>
+            <th>Review</th>
+            <th>Stars from 1 to 5</th>
+            <th>Review date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Restaurant.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.User.Username)</td>
+                <td>@Html.DisplayFor(modelItem => item.Content)</td>
+                <td>@Html.DisplayFor(modelItem => item.Stars)/5</td>
+                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
