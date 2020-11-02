@@ -40,6 +40,7 @@ namespace RestaurantRating.Models
             }
 
             var restaurant = await _context.Restaurant
+                .Include(r => r.Reviews)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (restaurant == null)
             {
@@ -48,15 +49,12 @@ namespace RestaurantRating.Models
 
             return View(restaurant);
         }
-        
+
         // GET: Restaurants/Create
         public IActionResult Create()
         {
             return View();
         }
-
-
-
 
         // POST: Restaurants/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

@@ -66,7 +66,7 @@ namespace RestaurantRating
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Restaurants}/{action=Index}/{id?}");
             });
         }
     }
