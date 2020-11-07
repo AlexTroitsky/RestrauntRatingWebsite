@@ -19,10 +19,14 @@ namespace RestaurantRating.Models
         public int PriceLevel { get; set; }
         [Range(1, 5)]
         public int Rating { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Adress is incorrect")]
         public string City { get; set; }
         [Required]
         public string Address { get; set; }
+        [Required]
+        public double Lat { get; set; } 
+        [Required]
+        public double Lon { get; set; }
         public byte[] Image { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
