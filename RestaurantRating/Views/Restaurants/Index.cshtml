@@ -41,60 +41,57 @@
 
         @foreach (var restaurant in Model)
         {
-            @if (restaurant.Image != null)
-            {
-                String img = Convert.ToBase64String(restaurant.Image);
-                <div class="col s4 m4">
-                    <div class="card small">
-                        <div class="card-image">
-                            <a asp-action="Details" asp-route-id="@restaurant.Id">
-                                <img class="rounded-circle" src="data:image/png;base64,@img">
-                                <span class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</span>
-                                @if (isManager)
-                                {
+            
+            String src = (restaurant.Image == null) ? "images/Restraunt.jpg" : "data:image / png; base64,"+ Convert.ToBase64String(restaurant.Image);
+            <div class="col s4 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <a asp-action="Details" asp-route-id="@restaurant.Id">
+                            <img class="rounded-circle" src="@src">
+                            <span class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</span>
 
+                        </a>
+                        @if (isManager)
+                        {
+                            <a asp-action="Delete" asp-route-id="@restaurant.Id" class="btn-floating halfway-fab waves-effect waves-light red btn-sm"><i class="material-icons">delete_forever</i></a>
 
-                                        <a asp-action="Delete" asp-route-id="@restaurant.Id" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete_forever</i></a>
-
-                                }
-                            </a>
-
-                        </div>
-
-                        <div class="card-stacked">
-
-                            <div class="card-content">
-
-                                    <p>@restaurant.Description</p>
-
-                            </div>
-
-
-                            <div class="card-action">
-                                <div class="left">
-                                    @for (int i = 0; i < restaurant.Rating; i++)
-                                    {
-                                        <i class="material-icons">star</i>
-                                    }
-                                    @for (int i = 0; i < 5 - restaurant.Rating; i++)
-                                    {
-                                        <i class="material-icons">star_border</i>
-                                    }
-
-                                </div>
-                                <div class="right">
-                                    @for (int i = 0; i < restaurant.PriceLevel; i++)
-                                    {
-                                        <i class="material-icons">$</i>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
+                        }
                     </div>
-                </div>
 
-            }
+                    <div class="card-stacked">
+
+                        <div class="card-content">
+
+                                <p>@restaurant.Description</p>
+
+                        </div>
+
+
+                        <div class="card-action">
+                            <div class="left">
+                                @for (int i = 0; i < restaurant.Rating; i++)
+                                {
+                                    <i class="material-icons">star</i>
+                                }
+                                @for (int i = 0; i < 5 - restaurant.Rating; i++)
+                                {
+                                    <i class="material-icons">star_border</i>
+                                }
+
+                            </div>
+                            <div class="right">
+                                @for (int i = 0; i < restaurant.PriceLevel; i++)
+                                {
+                                    <i class="material-icons">$</i>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
         }
         @if (isLoggedIn && isManager)
         {

@@ -10,8 +10,8 @@ using RestaurantRating.Data;
 namespace RestaurantRating.Migrations
 {
     [DbContext(typeof(RestaurantRatingContext))]
-    [Migration("20201107174810_init")]
-    partial class init
+    [Migration("20201107223424_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
