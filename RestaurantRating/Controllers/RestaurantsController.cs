@@ -61,7 +61,7 @@ namespace RestaurantRating.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,ImageFile")] Restaurant restaurant)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,Lat,Lon,ImageFile")] Restaurant restaurant)
         {
 
             if (ModelState.IsValid)
