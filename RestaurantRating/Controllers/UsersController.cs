@@ -47,6 +47,18 @@ namespace RestaurantRating.Models
 
             if (user != null)
             {
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
+                if (user.UserType == 0)
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+                }
+                else
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
+                }
+                
                 SignIn(user);
                 return RedirectToAction("Index", "Home");
             }

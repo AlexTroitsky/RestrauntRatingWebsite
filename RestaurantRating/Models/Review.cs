@@ -18,7 +18,7 @@ namespace RestaurantRating.Models
         [Required]
         public int Stars { get; set; }
         public DateTime Date { get; set; }
-        public int UserId { get; set; }
+        public string UserName { get; set; }
         public User User { get; set; }
         public int RestaurantId { get; set; }
         public Restaurant Restaurant { get; set; }
