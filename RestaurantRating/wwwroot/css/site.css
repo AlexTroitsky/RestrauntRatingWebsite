@@ -76,3 +76,21 @@ textarea {
 }
 
 
+
+#statistics-pie {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+    -moz-column-width: 100px; /* Firefox */
+    column-width: 100px;
+}
+
+#statistics-bar {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    -webkit-column-width: 80%; /* Chrome, Safari, Opera */
+    -moz-column-width: 80%; /* Firefox */
+    column-width: 80%;
+}

@@ -50,6 +50,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Restaurants", "Index", "Restaurants")</li>
 
+
                     @if (isManager)
                     {
                         <li>@Html.ActionLink("Users", "Index", "Users")</li>
@@ -63,6 +64,9 @@
                     {
                         <li>@Html.ActionLink("Login", "Login", "Users")</li>
                     }
+                    <li class="nav-item li-2 px-lg-4">
+                        @Html.ActionLink("About", "About", "Home")
+                    </li>
                 </ul>
             </div>
         </div>
