@@ -114,7 +114,6 @@ namespace RestaurantRating.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
         {
             if (id != review.Id)
@@ -165,7 +164,6 @@ namespace RestaurantRating.Controllers
 
         // POST: Reviews/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var review = await _context.Review.FindAsync(id);
