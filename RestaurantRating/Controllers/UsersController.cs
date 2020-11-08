@@ -27,6 +27,7 @@ namespace RestaurantRating.Models
         {
             var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.UserType.ToString()),
                 };
@@ -47,18 +48,6 @@ namespace RestaurantRating.Models
 
             if (user != null)
             {
-                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
-                if (user.UserType == 0)
-                {
-                    identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
-                }
-                else
-                {
-                    identity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
-                }
-                
                 SignIn(user);
                 return RedirectToAction("Index", "Home");
             }
@@ -103,7 +92,7 @@ namespace RestaurantRating.Models
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -146,7 +135,7 @@ namespace RestaurantRating.Models
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]

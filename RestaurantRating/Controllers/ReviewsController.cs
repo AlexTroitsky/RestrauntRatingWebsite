@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
 using RestaurantRating.Migrations;
 using RestaurantRating.Models;
+using System.Security.Claims;
 
 namespace RestaurantRating.Controllers
 {
@@ -32,8 +33,7 @@ namespace RestaurantRating.Controllers
         public async Task<IActionResult> IndexOfRestaurant(int id)
         {
             var reviews = await _context.Review
-                .Where(r => r.RestaurantId == id)
-                //.Include(o => o.Restaurant)
+                .Where(r => r.RestaurantId == id).Include(r => r.User)
                 .ToListAsync();
                 return Json(reviews);
         }
@@ -74,19 +74,19 @@ namespace RestaurantRating.Controllers
             return View(review);
         }
 
-        
+
         // POST: Reviews/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,Stars,UserName,RestaurantId")] Review review)
+        public async Task<IActionResult> Create([Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
         {
             if (ModelState.IsValid)
             {
                 review.Date = DateTime.Now;
                 review.Restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
-                review.User = _context.User.First(u => u.Username == review.UserName);
+                review.User = _context.User.First(u => u.Id == review.UserId);
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -111,11 +111,11 @@ namespace RestaurantRating.Controllers
         }
 
         // POST: Reviews/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,UserName,RestaurantId")] Review review)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
         {
             if (id != review.Id)
             {
@@ -126,7 +126,6 @@ namespace RestaurantRating.Controllers
             {
                 try
                 {
-                    review.Date = DateTime.Now;
                     _context.Update(review);
                     await _context.SaveChangesAsync();
                 }
@@ -165,9 +164,9 @@ namespace RestaurantRating.Controllers
         }
 
         // POST: Reviews/Delete/5
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var review = await _context.Review.FindAsync(id);
             _context.Review.Remove(review);

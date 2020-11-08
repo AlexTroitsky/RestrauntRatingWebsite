@@ -2,8 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
-    Boolean isLoggedIn = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value != null;
-    Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
+    var currenrUserId = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid)?.Value;
 }
 
 <h1>Details</h1>
@@ -144,7 +143,7 @@
                 data: {
                 Content: $('#addReviewContent').val(),
                     Stars: $('#addReviewStars').val(),
-                    UserName: "@User.Identity.Name",
+                    UserId: "@currenrUserId",
                     RestaurantId: location.href.substr(location.href.lastIndexOf('/') + 1)
                 }
             }).done(function () {
@@ -181,11 +180,9 @@
         function buildTable() {
             $.ajax({
                 url: "/Reviews/IndexOfRestaurant/" + location.href.substr(location.href.lastIndexOf('/') + 1),
-                success: function (data) {
+                success: function (result) {
                     var deleteBtns = document.getElementsByClassName('reviewDelete');
                     var editBtns = document.getElementsByClassName('reviewEdit');
-                    var result = JSON.stringify(data);
-                    result = JSON.parse(result);
                     reviewsBody.innerHTML = "";
                     for (var i = 0; i < result.length; i++) {
                         var starsHtml = "";
@@ -194,7 +191,7 @@
                         var currReviewId = (result[i].id).toString();
                         var currReviewContent = result[i].content;
                         var currReviewStars = result[i].stars;
-                        if (result[i].userName == ("@User.Identity.Name").toString()) {
+                        if (result[i].userId == "@currenrUserId") {
 
                             editAndDeleteHtml =
                             "<input type='submit' value='Edit' class='btn reviewEdit' id='reviewEdit" + currReviewId + "'/> | " +
@@ -215,24 +212,13 @@
                             "<option value='2'>2 Below Average</option><option value='1'>1 Poor</option></select></div><br/>" +
                             "<div><input type='submit' value='Submit Edited Review' class='btn editReview' id='editReview" + currReviewId + "'/></div></div>";
                         };
-                        switch (result[i].stars) {
-                            case 1:
-                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
-                                break;
-                            case 2:
-                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
-                                break;
-                            case 3:
-                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i><i class='material-icons'>star_border</i>";
-                                break;
-                            case 4:
-                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star_border</i>";
-                                break;
-                            case 5:
-                                var starsHtml = "<i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i><i class='material-icons'>star</i>";
-                                break;
-                        }
-                        reviewsBody.innerHTML = reviewsBody.innerHTML + "<tr><td>" + result[i].userName +
+
+                        const fullStar = "<i class='material-icons'>star</i>";
+                        const emptyStar = "<i class='material-icons'>star_border</i>";
+
+                        var starsHtml = fullStar.repeat(result[i].stars) + emptyStar.repeat(5 - result[i].stars);
+                        
+                        reviewsBody.innerHTML = reviewsBody.innerHTML + "<tr><td>" + result[i].user.username +
                             "</td><td>" + result[i].content +
                             "</td><td>" + starsHtml +
                             "</td><td>" + (result[i].date).toString().slice(0, 10) +
@@ -266,12 +252,12 @@
                             };
 
                             $.post({
-                                url: "/Reviews/edit",
+                                url: "/Reviews/Edit/" + currReviewId,
                                 data: {
                                     Id: currReviewId,
                                     Content: editReviewContent,
                                     Stars: editReviewCStars,
-                                    UserName: "@User.Identity.Name",
+                                    UserId: "@currenrUserId",
                                     RestaurantId: location.href.substr(location.href.lastIndexOf('/') + 1)
                                 }
                             }).done(function () {
@@ -307,7 +293,7 @@
 
                         $('.yesDeleteReview').click(function () {
                             $.post({
-                                url: "/Reviews/Delete",
+                                url: "/Reviews/Delete/" + currReviewId,
                                 data: {
                                     id: currReviewId
                                 }
