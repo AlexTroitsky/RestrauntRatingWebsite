@@ -12,7 +12,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="RestaurantId" hidden value="@ViewBag.restaurant.Id" />
             @*to delete*@
-            <input asp-for="UserId" hidden value="1" />
+            @*<input asp-for="UserId" hidden value="1" />*@
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
                 <input asp-for="Content" class="form-control" placeholder="Tell us what you think" autocomplete="off" />

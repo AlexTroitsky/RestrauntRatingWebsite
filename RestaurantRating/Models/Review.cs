@@ -10,7 +10,7 @@ namespace RestaurantRating.Models
     public class Review
     {
         public int Id { get; set; }
-        
+
         [MaxLength(100)]
         [Required]
         public string Content { get; set; }
