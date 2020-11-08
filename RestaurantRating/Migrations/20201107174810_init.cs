@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RestaurantRating.Migrations
 {
-    public partial class a : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,6 +19,8 @@ namespace RestaurantRating.Migrations
                     Rating = table.Column<int>(nullable: false),
                     City = table.Column<string>(nullable: false),
                     Address = table.Column<string>(nullable: false),
+                    Lat = table.Column<double>(nullable: false),
+                    Lon = table.Column<double>(nullable: false),
                     Image = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
@@ -47,11 +49,11 @@ namespace RestaurantRating.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: false),
-                    RestaurantId = table.Column<int>(nullable: false),
-                    Content = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(maxLength: 100, nullable: false),
                     Stars = table.Column<int>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false)
+                    Date = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    RestaurantId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
