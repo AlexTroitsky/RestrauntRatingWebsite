@@ -40,6 +40,12 @@ namespace RestaurantRating.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<double>("Lat")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Lon")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

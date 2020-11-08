@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
-using RestaurantRating.Migrations;
+//using RestaurantRating.Migrations;
 using RestaurantRating.Models;
 using System.Security.Claims;
 
