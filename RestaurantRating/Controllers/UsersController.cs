@@ -96,7 +96,7 @@ namespace RestaurantRating.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Username,Password")] User user)
+        public async Task<IActionResult> Create([Bind("Username,Password,Address,Lat,Lon")] User user)
         {
             if (_context.User.Where(c => c.Username.Equals(user.Username)).Count() > 0)
             {
