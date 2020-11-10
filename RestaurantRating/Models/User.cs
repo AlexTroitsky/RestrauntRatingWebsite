@@ -22,5 +22,11 @@ namespace RestaurantRating.Models
         [Display(Name = "Type")]
         [Required(ErrorMessage = "Type is required")]
         public UserType? UserType { get; set; }
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public double Lat { get; set; }
+        [Required]
+        public double Lon { get; set; }
     }
 }

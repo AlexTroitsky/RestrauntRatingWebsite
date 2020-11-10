@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantRating.Data;
 
 namespace RestaurantRating.Migrations
 {
     [DbContext(typeof(RestaurantRatingContext))]
-    partial class RestaurantRatingContextModelSnapshot : ModelSnapshot
+    [Migration("20201107104116_new11")]
+    partial class new11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,12 +41,6 @@ namespace RestaurantRating.Migrations
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<double>("Lat")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -82,8 +78,11 @@ namespace RestaurantRating.Migrations
                     b.Property<int>("Stars")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -100,16 +99,6 @@ namespace RestaurantRating.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Lat")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("float");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -130,9 +119,6 @@ namespace RestaurantRating.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "Tel Aviv Street 5, Haifa, Israel",
-                            Lat = 32.824648099999997,
-                            Lon = 34.989214400000002,
                             Password = "1234",
                             UserType = 0,
                             Username = "test"
@@ -149,9 +135,7 @@ namespace RestaurantRating.Migrations
 
                     b.HasOne("RestaurantRating.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

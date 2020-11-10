@@ -27,6 +27,9 @@ namespace RestaurantRating.Data
                 Id = 1,
                 Username = "test",
                 Password = "1234",
+                Address = "Tel Aviv Street 5, Haifa, Israel",
+                Lat = 32.8246481,
+                Lon = 34.9892144,
                 UserType = UserType.Admin
 
             });
