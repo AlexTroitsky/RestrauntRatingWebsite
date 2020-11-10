@@ -9,6 +9,11 @@
 
 <div>
     <h4>Restaurant</h4>
+    <section id="map">
+        <div class="map-wrapper">
+            <div class="map-canvas" id="map-canvas" style="align-content:center; height: 800px; width: 1100px;"></div>
+        </div>
+    </section>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -121,6 +126,16 @@
     </div>
 </div>
 <br />
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNKZSvcXEelSKurf1mbBtwpHjqSpq7P2w"
+        defer></script>
+<script type="text/javascript" defer>
+    var title = @Html.Raw(Json.Serialize(@Model.Name));
+    var lon = @Html.Raw(Json.Serialize(@Model.Lon));
+    var lat = @Html.Raw(Json.Serialize(@Model.Lat));
+</script>
+<script src="~/js/restaurant-map.js" defer></script>
 
 <script>
     $(document).ready(() => {
