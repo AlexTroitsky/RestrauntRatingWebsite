@@ -1,8 +1,62 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<iframe style="width: 100%" height="800px" src="https://www.youtube-nocookie.com/embed/F3zw1Gvn4Mk?controls=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (ViewBag.Suggestions != null)
+{
+    <div class="row">
+
+        <div class="col-lg-6">
+            <img src="~/images/Restraunt.jpg" width="100%" />
+        </div>
+        <div class="col-lg-6">
+            <center>
+                <hr />
+                <h4 id="intro-text">You Might Like</h4>
+                <hr />
+                @foreach (Restaurant restaurant in ViewBag.Suggestions)
+                {
+                    <a asp-controller="Restaurants" asp-action="Details" asp-route-id="@restaurant.Id">
+                        <i>
+                            @restaurant.Name / @restaurant.City
+                        </i>
+                    </a>
+                    <br />
+                }
+
+            </center>
+            
+        </div>
+    </div>
+}
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-6 text-center">
+                <hr>
+                <h2 class="intro-text text-center">
+                    Restraunts
+                    <strong>Statistics</strong>
+                </h2>
+                <hr>
+                <hr class="visible-xs">
+                <p>
+                    <partial name="~/Views/Stats/Stats.cshtml" view-data="ViewData" />
+
+                </p>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <hr>
+                <h2 class="intro-text text-center">
+                    <strong>Restraunt Reviews!!!</strong>
+                </h2>
+                <hr>
+                <a href="https://twitter.com/intent/tweet?screen_name=BuzzFeedFood" class="twitter-mention-button" data-show-count="false">Tweet to BuzzFeed</a>
+                <br />
+                <a class="twitter-timeline" data-width="400" data-height="500" href="https://twitter.com/BuzzFeedFood?ref_src=twsrc%5Etfw">Tweets by lenovo</a>
+                <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+                <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+        </div>
+    </div>

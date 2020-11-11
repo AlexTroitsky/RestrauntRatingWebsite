@@ -32,7 +32,7 @@
     Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
 }
 
-<body>
+<body style="background-color: black">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -50,6 +50,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Restaurants", "Index", "Restaurants")</li>
 
+
                     @if (isManager)
                     {
                         <li>@Html.ActionLink("Users", "Index", "Users")</li>
@@ -63,6 +64,9 @@
                     {
                         <li>@Html.ActionLink("Login", "Login", "Users")</li>
                     }
+                    <li class="nav-item li-2 px-lg-4">
+                        @Html.ActionLink("About", "About", "Home")
+                    </li>
                 </ul>
             </div>
         </div>
@@ -71,7 +75,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - RestRate</p>
+            <p id="intro-text"> &copy; @DateTime.Now.Year - RestRate</p>
         </footer>
     </div>
 

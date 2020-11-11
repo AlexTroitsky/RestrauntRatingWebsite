@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -68,8 +69,11 @@ namespace RestaurantRating.Models
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    restaurant.ImageFile.CopyTo(ms);
-                    restaurant.Image = ms.ToArray();
+                    if (restaurant.ImageFile != null)
+                    {
+                        restaurant.ImageFile.CopyTo(ms);
+                        restaurant.Image = ms.ToArray();
+                    }
                 }
 
                 _context.Add(restaurant);
