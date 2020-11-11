@@ -43,25 +43,26 @@
         @foreach (var restaurant in Model)
         {
             
-            String src = (restaurant.Image == null) ? "images/Restraunt.jpg" : "data:image / png; base64,"+ Convert.ToBase64String(restaurant.Image);
+            String src = (restaurant.Image == null) ? "images/Logo.png" : "data:image / png; base64,"+ Convert.ToBase64String(restaurant.Image);
             <div class="col s4 m4">
-                <div class="card small">
+                <div class="card small" style="background-color: black">
+                    @if (isManager)
+                    {
+                        <a asp-action="Delete" asp-route-id="@restaurant.Id" class="btn-floating halfway-fab waves-effect waves-light red btn-sm"><i class="material-icons">delete_forever</i></a>
+                    }
                     <div class="card-image">
                         <a asp-action="Details" asp-route-id="@restaurant.Id">
                             <img class="rounded-circle" src="@src">
-                            <span class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</span>
+                            <small id="intro-text" class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</small>
                         </a>
-                        @if (isManager)
-                        {
-                            <a asp-action="Delete" asp-route-id="@restaurant.Id" class="btn-floating halfway-fab waves-effect waves-light red btn-sm"><i class="material-icons">delete_forever</i></a>
-                        }
+
                     </div>
 
                     <div class="card-stacked">
 
                         <div class="card-content">
 
-                                <p>@restaurant.Description</p>
+                            <p>@restaurant.Description</p>
 
                         </div>
 
@@ -95,7 +96,7 @@
         @if (isLoggedIn && isManager)
         {
             <div class="col s4 m4">
-                <div class="card-panel">
+                <div class="card-panel" style="background-color: black">
                     <div class="text-center">
                         <a asp-action="Create" class="btn-large waves-effect waves-light blue"><i class="material-icons">add</i></a>
                     </div>

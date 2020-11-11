@@ -27,7 +27,7 @@
 
         }
 
-        document.getElementById("adress-city").value = place.address_components[2].short_name;
+        document.getElementById("adress-city").value = place.address_components[1].short_name;
         document.getElementById("adress-coordinates-lat").value = place.geometry.location.lat();
         document.getElementById("adress-coordinates-lon").value = place.geometry.location.lng();
 

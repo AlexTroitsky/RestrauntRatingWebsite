@@ -31,10 +31,11 @@ namespace RestaurantRating.Controllers
             var RestrauntsByReviews = _context.Restaurant.GroupBy(r => r.Id).Select(g => new { review = g.Key.ToString(), count = g.Count() }).ToList();
             var RestrauntsByReviewsJSON = JsonConvert.SerializeObject(RestrauntsByReviews);
             ViewData["RestrauntsByReviewsJSON"] = RestrauntsByReviewsJSON;
-            User connected_user = (User)_context.User.Where(user => user.Id.ToString().Equals(HttpContext.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Value));
+            var connected_claim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid);
             //ViewBag.mostPopResraunt = _context.Users.GroupBy(r => r.favoriteComputer).Select(g => new { Computer = ((Computer)g.Key), count = g.Count() }).OrderByDescending(r => r.count).FirstOrDefault()?.Computer;
-            if (connected_user != null)
+            if (connected_claim != null)
             {
+                var connected_user = _context.User.Find(Int32.Parse(connected_claim.Value));
                 ViewBag.Suggestions = this.GetSuggestions(connected_user);
             }
             return View();
@@ -52,13 +53,7 @@ namespace RestaurantRating.Controllers
                 return userRestaurants;
             }
             KNNAlgorithm knn = new KNNAlgorithm(numberOfSuggestions, userRestaurants);
-            List<Restaurant> allSuggestedMovies = new List<Restaurant>();
-            foreach (Restaurant r in userRestaurants)
-            {
-                allSuggestedMovies.AddRange(knn.GetNearest(r).ToList());
-            }
-
-            return allSuggestedMovies;
+            return knn.GetNearestFor(user).OrderByDescending(r => r.Rating).ToList();
 
         }
         public ActionResult About()

@@ -30,7 +30,7 @@ namespace RestaurantRating.KNN
 
         }
 
-        public List<Restaurant> GetNearest(Restaurant restaurant)
+        public List<Restaurant> GetNearestFor(User user)
         {
             //calculate all distances
             for (int i = 0; i < this.TotalTrainset; i++)
@@ -38,7 +38,7 @@ namespace RestaurantRating.KNN
                 distances[i] = new Distance();
                 distances[i].distance = 0;
                 distances[i].index = i;
-                distances[i].distance = GetDistance(restaurant.Lat, this.TrainSet[i].Lat, restaurant.Lon, this.TrainSet[i].Lon);
+                distances[i].distance = GetDistance(user.Lat, this.TrainSet[i].Lat, user.Lon, this.TrainSet[i].Lon);
             }
 
             //sort
