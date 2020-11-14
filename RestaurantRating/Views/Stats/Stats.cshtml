@@ -2,23 +2,25 @@
 @{
     ViewBag.Title = "Stats";
 }
+<div class="col-md-5">
 
 <div class="stat-chart" id="statistics-pie">
     <p>Restraunts By City</p>
     <div class="pie"></div>
     <p id="tooltip"></p>
 </div>
+</div>
+<div class="col-md-5">
 
-<br /><br />
-<div class="stat-chart" id="statistics-bar">
-    <p>The following chart shows the number of reviews in every restraunt</p>
-    <div class="bar" id="statistics-bar"></div>
+    <div class="stat-chart" id="statistics-bar">
+        <p>The following chart shows the number of reviews in every restraunt</p>
+        <div class="bar" id="statistics-bar"></div>
+    </div>
 </div>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-
-<script>
+    <script>
 
     // draw a pie
     function drawPie(jsonData) {
@@ -94,7 +96,7 @@
 
     function drawBar(jsonData) {
         var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            width = 700 - margin.left - margin.right,
+            width = 500 - margin.left - margin.right,
             height = 300 - margin.top - margin.bottom;
 
         // set the ranges
@@ -145,12 +147,12 @@
               .attr("y", 6)
               .attr("dy", "-35px")
               .attr("fill", "wheat")
-              .text("Calories");
+              .text("Reviews");
     }
 
-    var RestrauntsByCityJSON = JSON.parse('@Html.Raw(ViewData["RestrauntsByCityJSON"])'); 
+    var RestrauntsByCityJSON = JSON.parse('@Html.Raw(ViewData["RestrauntsByCityJSON"])');
     var RestrauntsByReviewsJSON = JSON.parse('@Html.Raw(ViewData["RestrauntsByReviewsJSON"])');
     drawPie(RestrauntsByCityJSON);
     drawBar(RestrauntsByReviewsJSON);
-</script>
+    </script>
 

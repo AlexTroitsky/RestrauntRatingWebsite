@@ -28,7 +28,7 @@ namespace RestaurantRating.Controllers
             var RestrauntsByCityJSON = JsonConvert.SerializeObject(RestrauntsByCity);
             ViewData["RestrauntsByCityJSON"] = RestrauntsByCityJSON;
 
-            var RestrauntsByReviews = _context.Restaurant.GroupBy(r => r.Id).Select(g => new { review = g.Key.ToString(), count = g.Count() }).ToList();
+            var RestrauntsByReviews = _context.Review.GroupBy(r => r.RestaurantId).Select(g => new { review = g.Key.ToString(), count = g.Count() }).ToList();
             var RestrauntsByReviewsJSON = JsonConvert.SerializeObject(RestrauntsByReviews);
             ViewData["RestrauntsByReviewsJSON"] = RestrauntsByReviewsJSON;
             var connected_claim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid);
