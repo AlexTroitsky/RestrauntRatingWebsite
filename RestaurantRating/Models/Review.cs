@@ -17,6 +17,9 @@ namespace RestaurantRating.Models
         [Range(1, 5)]
         [Required]
         public int Stars { get; set; }
+        [Range(1, 5)]
+        [Required]
+        public int Price { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }

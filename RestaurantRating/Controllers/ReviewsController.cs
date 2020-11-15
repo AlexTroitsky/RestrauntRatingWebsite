@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
-//using RestaurantRating.Migrations;
 using RestaurantRating.Models;
 using System.Security.Claims;
 
@@ -30,10 +29,10 @@ namespace RestaurantRating.Controllers
         }
 
         // GET: ReviewsOfRestaurant
-        public async Task<IActionResult> IndexOfRestaurant(int id)
+        public async Task<IActionResult> ReviewsOfRestaurant(int id)
         {
             var reviews = await _context.Review
-                .Where(r => r.RestaurantId == id).Include(r => r.User)
+                .Where(r => r.RestaurantId == id)
                 .ToListAsync();
                 return Json(reviews);
         }
@@ -80,7 +79,7 @@ namespace RestaurantRating.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
+        public async Task<IActionResult> Create([Bind("Id,Content,Stars,Price,UserId,RestaurantId")] Review review)
         {
             if (ModelState.IsValid)
             {
@@ -114,7 +113,8 @@ namespace RestaurantRating.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,Price,UserId,RestaurantId")] Review review)
         {
             if (id != review.Id)
             {
@@ -163,8 +163,9 @@ namespace RestaurantRating.Controllers
         }
 
         // POST: Reviews/Delete/5
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             var review = await _context.Review.FindAsync(id);
             _context.Review.Remove(review);
