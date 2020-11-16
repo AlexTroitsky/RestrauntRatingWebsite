@@ -9,6 +9,7 @@ namespace RestaurantRating.Models
 {
     public class Review
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [MaxLength(100)]

@@ -42,8 +42,8 @@
 
         @foreach (var restaurant in Model)
         {
-            
-            String src = (restaurant.Image == null) ? "images/Logo.png" : "data:image / png; base64,"+ Convert.ToBase64String(restaurant.Image);
+
+            String src = (restaurant.Image == null) ? "images/Logo.png" : "data:image/png;base64, " + Convert.ToBase64String(restaurant.Image);
             <div class="col s4 m4">
                 <div class="card small" style="background-color: black">
                     @if (isManager)
@@ -52,17 +52,17 @@
                     }
                     <div class="card-image">
                         <a asp-action="Details" asp-route-id="@restaurant.Id">
-                            <img class="rounded-circle" src="@src">
-                            <small id="intro-text" class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</small>
+                            <img class="rounded-circle" style='display:block; width:100%;height:90%;' src="@src">
+                            <small id="intro-text" class="card-title" style="color: whitesmoke">@restaurant.Name / @restaurant.City</small>
                         </a>
 
                     </div>
 
                     <div class="card-stacked">
 
-                        <div class="card-content">
+                        <div class="card-content text-center">
 
-                            <p>@restaurant.Description</p>
+                            <p style="color: white">@restaurant.Description</p>
 
                         </div>
 
@@ -71,18 +71,18 @@
                             <div class="left">
                                 @for (int i = 0; i < restaurant.Rating; i++)
                                 {
-                                    <i class="material-icons">star</i>
+                                    <i style="color: white" class="material-icons">star</i>
                                 }
                                 @for (int i = 0; i < 5 - restaurant.Rating; i++)
                                 {
-                                    <i class="material-icons">star_border</i>
+                                    <i style="color: white" class="material-icons">star_border</i>
                                 }
 
                             </div>
                             <div class="right">
                                 @for (int i = 0; i < restaurant.PriceLevel; i++)
                                 {
-                                    <i class="material-icons">$</i>
+                                    <i style="color: white" class="material-icons">$</i>
                                 }
                             </div>
                         </div>
