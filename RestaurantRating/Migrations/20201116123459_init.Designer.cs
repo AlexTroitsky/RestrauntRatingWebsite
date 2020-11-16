@@ -10,7 +10,7 @@ using RestaurantRating.Data;
 namespace RestaurantRating.Migrations
 {
     [DbContext(typeof(RestaurantRatingContext))]
-    [Migration("20201115172327_init")]
+    [Migration("20201116123459_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,9 +24,7 @@ namespace RestaurantRating.Migrations
             modelBuilder.Entity("RestaurantRating.Models.Restaurant", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -66,9 +64,7 @@ namespace RestaurantRating.Migrations
             modelBuilder.Entity("RestaurantRating.Models.Review", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -102,9 +98,7 @@ namespace RestaurantRating.Migrations
             modelBuilder.Entity("RestaurantRating.Models.User", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -130,18 +124,6 @@ namespace RestaurantRating.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Tel Aviv Street 5, Haifa, Israel",
-                            Lat = 32.824648099999997,
-                            Lon = 34.989214400000002,
-                            Password = "1234",
-                            UserType = 0,
-                            Username = "test"
-                        });
                 });
 
             modelBuilder.Entity("RestaurantRating.Models.Review", b =>

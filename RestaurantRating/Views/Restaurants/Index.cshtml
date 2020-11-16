@@ -89,12 +89,12 @@
                 <div class="card-image">
                     <a asp-action="Details" asp-route-id="@restaurant.Id">
                         <img class="rounded-circle" src="@src">
-                        <small id="intro-text" class="card-title" style="color: aliceblue">@restaurant.Name / @restaurant.City</small>
+                        <small id="intro-text" class="card-title" style="background-color: black; color: whitesmoke;">@restaurant.Name / @restaurant.City</small>
                     </a>
                 </div>
                 <div class="card-stacked">
-                    <div class="card-content">
-                        <p>@restaurant.Description</p>
+                    <div class="card-content text-center">
+                        <p style="color: white">@restaurant.Description</p>
                     </div>
                     <div class="card-action">
                         <div class="left" id="starsHtml_@restaurant.Id">

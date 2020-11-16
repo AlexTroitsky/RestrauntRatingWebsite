@@ -11,8 +11,7 @@ namespace RestaurantRating.Migrations
                 name: "Restaurant",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     PriceLevel = table.Column<int>(nullable: false),
@@ -32,8 +31,7 @@ namespace RestaurantRating.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
                     UserType = table.Column<int>(nullable: false),
@@ -50,8 +48,7 @@ namespace RestaurantRating.Migrations
                 name: "Review",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     Content = table.Column<string>(maxLength: 100, nullable: false),
                     Stars = table.Column<int>(nullable: false),
                     Price = table.Column<int>(nullable: false),
@@ -75,11 +72,6 @@ namespace RestaurantRating.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "Address", "Lat", "Lon", "Password", "UserType", "Username" },
-                values: new object[] { 1, "Tel Aviv Street 5, Haifa, Israel", 32.824648099999997, 34.989214400000002, "1234", 0, "test" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Review_RestaurantId",

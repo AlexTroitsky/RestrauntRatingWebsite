@@ -9,7 +9,7 @@ namespace RestaurantRating.Data
 {
     public class RestaurantRatingContext : DbContext
     {
-        public RestaurantRatingContext (DbContextOptions<RestaurantRatingContext> options)
+        public RestaurantRatingContext(DbContextOptions<RestaurantRatingContext> options)
             : base(options)
         {
         }
@@ -22,17 +22,9 @@ namespace RestaurantRating.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(new User
-            {
-                Id = 1,
-                Username = "test",
-                Password = "1234",
-                Address = "Tel Aviv Street 5, Haifa, Israel",
-                Lat = 32.8246481,
-                Lon = 34.9892144,
-                UserType = UserType.Admin
-
-            });
+            modelBuilder.Entity<Restaurant>().ToTable("Restaurant");
+            modelBuilder.Entity<Review>().ToTable("Review");
+            modelBuilder.Entity<User>().ToTable("User");
         }
     }
 }

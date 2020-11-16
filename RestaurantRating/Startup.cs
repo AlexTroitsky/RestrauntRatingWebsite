@@ -31,7 +31,7 @@ namespace RestaurantRating
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 services.AddDbContext<RestaurantRatingContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(Configuration.GetConnectionString("AlexMacConnection")));
             else
                 services.AddDbContext<RestaurantRatingContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RestaurantRatingContext")));
