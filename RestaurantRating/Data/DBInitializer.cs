@@ -27,7 +27,7 @@ namespace RestaurantRating.Data
             new Restaurant{Id=3, Name="SOHO", Address="Moshe Beker St 15, Rishon LeTsiyon", City="Rishon LeTsiyon", Description="Sushi Bar", Lat=31.9737629, Lon=34.8083446, Rating=4, PriceLevel=5, Image=System.IO.File.ReadAllBytes("wwwroot/images/Soho.png"), Reviews=new List<Review>{ } },
 
             new Restaurant{Id=4, Name="Japanika", Address="HaArbaa, 2, HaArbaa, Tel Aviv, Sarona Gardens, Tel Aviv-Yafo, Tel Aviv District, no, Israel", City="Tel Aviv", Description="Asian Cuisine", Lat=32.0703169, Lon=34.7829342, Rating=5, PriceLevel=3, Image=System.IO.File.ReadAllBytes("wwwroot/images/Japanika.png"), Reviews=new List<Review>{ } },
-            new Restaurant{Id=5, Name="Domino's Pizza", Address="Shalom Aleichem, Ziv, Haifa, Haifa Subdistrict, Haifa District, no, Israel", City="Haifa", Description="Pizza branded as Domino's, is an American multinational pizza restaurant chain founded in 1961.", Lat=32.7831577, Lon=35.0145085, Rating=2, PriceLevel=2, Image=System.IO.File.ReadAllBytes("wwwroot/images/Dominos.png"), Reviews=new List<Review>{ } },
+            new Restaurant{Id=5, Name="Dominos Pizza", Address="Shalom Aleichem, Ziv, Haifa, Haifa Subdistrict, Haifa District, no, Israel", City="Haifa", Description="Pizza branded as Domino's, is an American multinational pizza restaurant chain founded in 1961.", Lat=32.7831577, Lon=35.0145085, Rating=2, PriceLevel=2, Image=System.IO.File.ReadAllBytes("wwwroot/images/Dominos.png"), Reviews=new List<Review>{ } },
 
 
             };
