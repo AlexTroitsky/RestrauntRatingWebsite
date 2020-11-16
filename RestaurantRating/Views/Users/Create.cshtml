@@ -11,7 +11,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
+                <input asp-for="Username" class="form-control" autocomplete="off"/>
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -21,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input id="adress-autocomplete" asp-for="Address" class="form-control" placeholder="" />
+                <input id="adress-autocomplete" asp-for="Address" class="form-control" placeholder="" autocomplete="off" />
                 <input id="adress-city" hidden />
                 <input id="adress-coordinates-lat" hidden asp-for="Lat" />
                 <input id="adress-coordinates-lon" hidden asp-for="Lon" />

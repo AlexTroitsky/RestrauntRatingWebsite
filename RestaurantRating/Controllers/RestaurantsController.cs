@@ -32,6 +32,17 @@ namespace RestaurantRating.Models
             return View(await showedMovies.ToListAsync());
         }
 
+
+        // POST: reviews
+        [HttpPost]
+        public async Task<IActionResult> getReviews(int restaurantId)
+        {
+            var reviews = (_context.Review
+                .Where(r => r.RestaurantId == restaurantId));
+            return Json(await reviews.ToListAsync());
+        }
+
+
         // GET: Restaurants/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -62,9 +73,12 @@ namespace RestaurantRating.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceLevel,Rating,City,Address,Lat,Lon,ImageFile")] Restaurant restaurant)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,City,Address,Lat,Lon,ImageFile")] Restaurant restaurant)
         {
-
+            restaurant.PriceLevel = 1;
+            restaurant.Rating = 1;
+            ModelState.Remove(nameof(restaurant.PriceLevel));
+            ModelState.Remove(nameof(restaurant.Rating));
             if (ModelState.IsValid)
             {
                 using (MemoryStream ms = new MemoryStream())
@@ -75,7 +89,6 @@ namespace RestaurantRating.Models
                         restaurant.Image = ms.ToArray();
                     }
                 }
-
                 _context.Add(restaurant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -166,6 +179,21 @@ namespace RestaurantRating.Models
         private bool RestaurantExists(int id)
         {
             return _context.Restaurant.Any(e => e.Id == id);
+        }
+
+        // POST: Restaurants/UpdateRestaurant
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateRestaurant(int restaurantId, int rating, int priceLevel)
+        {
+            var restaurant = await _context.Restaurant.FindAsync(restaurantId);
+            restaurant.Rating = rating;
+            restaurant.PriceLevel = priceLevel;
+            _context.Update(restaurant);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

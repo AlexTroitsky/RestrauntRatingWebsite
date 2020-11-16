@@ -2,243 +2,343 @@
 
 @{
     ViewData["Title"] = "Details";
-    var currenrUserId = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid)?.Value;
+    Boolean isLoggedIn = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value != null;
+    Boolean isManager = isLoggedIn && Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value.Equals(UserType.Admin.ToString());
+    var currentUserId = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid)?.Value;
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>Restaurant</h4>
-    <section id="map">
-        <div class="map-wrapper">
-            <div class="map-canvas" id="map-canvas" style="align-content:center; height: 800px; width: 1100px;"></div>
-        </div>
-    </section>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PriceLevel)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PriceLevel)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-    </dl>
-</div>
+    <br />
+    <br />
+    <table class="table">
+        <tr>
+            <td style="text-align:center;" colspan="2">
+                <h1>@Html.DisplayFor(model => model.Name)</h1>
+            </td>
+        </tr>
+        <tr>
 
-<div>
-    @*<a asp-action="Edit" asp-route-id="@Model.Id" class="btn">Edit Restaurant</a> |*@
-    <a asp-action="Index" class="btn">Back to List</a>
-</div>
-<hr />
-<h4>Reviews</h4>
-<div style="max-height:400px; overflow:auto;">
-    <table class="table sortable">
-        <thead>
-            <tr>
-                <th>
-                    User name
-                </th>
-                <th>
-                    Review
-                </th>
-                <th>
-                    Rating
-                </th>
-                <th>
-                    Review date
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="reviewsBody">
-            @*@foreach (var item in Model.Reviews)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.User.Username)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Content)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Stars)/5
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Date)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }*@
-        </tbody>
+            <td rowspan="2" style="text-align: center;">
+                @{
+                    String src = (Model.Image == null) ? "../../images/Logo.png" : "data:image / png; base64," + Convert.ToBase64String(Model.Image);
+                }
+
+
+                <img height="500" src="@src" runat="server"/>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(model => model.Description)</b>
+                <br /><br />
+                <div id="averageStars">
+
+                </div>
+                <br />
+                <div id="averagePrice">
+
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br />
+                @Html.DisplayFor(model => model.Address)
+                @Html.DisplayFor(model => model.City)
+                <br /><br />
+                <section id="map">
+                    <div class="map-wrapper">
+                        <div class="map-canvas" id="map-canvas" style="align-content:center; height: 300px; width: 500px;"></div>
+                    </div>
+                </section>
+            </td>
+        </tr>
     </table>
 </div>
+
 <hr />
-@* //Add Review *@
-<div>
-    <h4>Add Review</h4>
-    <div>
-        <textarea class="form-control" id="addReviewContent" maxlength="100" placeholder="Tell us what you think"></textarea>
-        <b><span class="text-danger" id="contentMessage">This field is required</span></b>
-    </div>
-    <br />
-    <div>
-        <select class="form-control" id="addReviewStars">
-            <option value="" disabled selected>Rating (From 1 to 5)</option>
-            <option value="5">5 Excellent</option>
-            <option value="4">4 Above Average</option>
-            <option value="3">3 Average</option>
-            <option value="2">2 Below Average</option>
-            <option value="1">1 Poor</option>
-        </select>
-        <b><span class="text-danger" id="ratingMessage">This field is required</span></b>
-    </div>
-    <br />
-    <div>
-        <input type="submit" value="Submit Review" class="btn" id="addReview" />
-    </div>
-</div>
-<br />
 
+@* //Reviews *@
+<table>
+    <tr>
+        <td>
+            <h4>Reviews</h4>
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="width:600px; max-height:400px; overflow:auto; background-color:white;">
+                <table class="table" id="reviewsBody">
+                </table>
+            </div>
+        </td>
+        <td>
+            @* //Add Review *@
+            <div id="addReviewDiv" hidden>
+                <h4 style="text-align:center;">Add Review</h4>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNKZSvcXEelSKurf1mbBtwpHjqSpq7P2w"
-        defer></script>
+                <div>
+                    <textarea class="form-control" style="resize:none;" rows="4" id="addReviewContent" maxlength="100" placeholder="Tell us what you think"></textarea>
+                    <b><span class="text-danger" id="contentMessage">Content field is required</span></b>
+                    <br />
+                    <select class="form-control" id="addReviewStars">
+                        <option value="" disabled selected>Rating (From 1 to 5)</option>
+                        <option value="5">5 Excellent</option>
+                        <option value="4">4 Above Average</option>
+                        <option value="3">3 Average</option>
+                        <option value="2">2 Below Average</option>
+                        <option value="1">1 Poor</option>
+                    </select>
+                    <b><span class="text-danger" id="starsMessage">Rating field is required</span></b>
+                    <br />
+                    <select class="form-control" id="addReviewPrice">
+                        <option value="" disabled selected>Price Level (From 1 to 5)</option>
+                        <option value="5">5 Too Expensive</option>
+                        <option value="4">4 Pretty Expensive</option>
+                        <option value="3">3 Average</option>
+                        <option value="2">2 Pretty Cheap</option>
+                        <option value="1">1 Very Cheap</option>
+                    </select>
+                    <b><span class="text-danger" id="priceMessage">Price level field is required</span></b>
+                </div>
+                <br />
+                <div style="text-align: center;">
+                    <input type="submit" value="Submit Review" class="btn" id="addReview" />
+                </div>
+            </div>
+            @if (isLoggedIn)
+            {
+                <script>
+                    var addReviewDiv = document.getElementById('addReviewDiv');
+                    addReviewDiv.hidden = false;
+                </script>
+            }
+        </td>
+    </tr>
+</table>
+
 <script type="text/javascript" defer>
     var title = @Html.Raw(Json.Serialize(@Model.Name));
     var lon = @Html.Raw(Json.Serialize(@Model.Lon));
     var lat = @Html.Raw(Json.Serialize(@Model.Lat));
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNKZSvcXEelSKurf1mbBtwpHjqSpq7P2w"
+        defer></script>
 <script src="~/js/restaurant-map.js" defer></script>
 
 <script>
     $(document).ready(() => {
         var contentMessage = document.getElementById('contentMessage');
         contentMessage.hidden = true;
-        var ratingMessage = document.getElementById('ratingMessage');
-        ratingMessage.hidden = true;
-        var reviewsBody = document.getElementById('reviewsBody');
-        //var temp = [
-        //    { "id": 3, "content": "Very good", "stars": 5, "date": "2020-10-16T00:00:00", "userId": 2, "user": null, "restaurantId": 2, "restaurant": null },
-        //    { "id": 4, "content": "Aaa", "stars": 3, "date": "2020-10-31T00:00:00", "userId": 3, "user": null, "restaurantId": 2, "restaurant": null },
-        //];
+        var starsMessage = document.getElementById('starsMessage');
+        starsMessage.hidden = true;
+        var priceMessage = document.getElementById('priceMessage');
+        priceMessage.hidden = true;
 
-        buildTable();
+        updateRatingAndPriceLevel();
+
+        var reviewsBody = document.getElementById('reviewsBody');
+
+        function updateRatingAndPriceLevel() {
+            $.ajax({
+                url: "/Reviews/ReviewsOfRestaurant/" + location.href.substr(location.href.lastIndexOf('/') + 1),
+                success: function (data) {
+                    var jsonOfReviews = JSON.stringify(data);
+                    jsonOfReviews = JSON.parse(jsonOfReviews);
+                    var reviewsCount = 0;
+                    var starsSum = 0;
+                    var starsAverage;
+                    var priceLevelSum = 0;
+                    var priceLevelAverage;
+
+                    for (var i = 0; i < jsonOfReviews.length; i++) {
+                        reviewsCount++;
+                        starsSum += jsonOfReviews[i].stars;
+                        priceLevelSum += jsonOfReviews[i].price;
+                    };
+                    starsAverage = Math.round(starsSum / reviewsCount);
+                    priceLevelAverage = Math.round(priceLevelSum / reviewsCount);
+
+                    $.post({
+                        url: "/Restaurants/UpdateRestaurant",
+                        data: {
+                            restaurantId: @Html.DisplayFor(model => model.Id),
+                            rating: starsAverage,
+                            priceLevel: priceLevelAverage
+                        }
+                    }).done(function () {
+                        var starsAverage = Math.round(@Html.DisplayFor(model => model.Rating));
+                        var starsAverageHtml = drawStars(starsAverage);
+                        (document.getElementById('averageStars')).innerHTML = starsAverageHtml;
+
+                        var priceAverage = Math.round(@Html.DisplayFor(model => model.PriceLevel));
+                        var priceAverageHtml = drawPrice(priceAverage);
+                        (document.getElementById('averagePrice')).innerHTML = priceAverageHtml;
+                    });
+                }
+            });
+        };
+
+        function drawStars(stars) {
+            var starsHtml = "";
+            for (var i = 0; i < stars; i++) {
+                starsHtml += "<i class='material-icons'>star</i>";
+            };
+            for (var i = 0; i < (5 - stars); i++) {
+                starsHtml += "<i class='material-icons'>star_border</i>";
+            };
+            return (starsHtml);
+        };
+
+        function drawPrice(priceLevel) {
+            var priceLevelHtml = "";
+            for (var i = 0; i < priceLevel; i++) {
+                priceLevelHtml += "<i class='material-icons'>$</i>";
+            };
+            return (priceLevelHtml);
+        };
 
         function createNewReview() {
-
             $.post({
             url: "/Reviews/create",
                 data: {
-                Content: $('#addReviewContent').val(),
+                    Content: $('#addReviewContent').val(),
                     Stars: $('#addReviewStars').val(),
-                    UserId: "@currenrUserId",
+                    Price: $('#addReviewPrice').val(),
+                    UserId: "@currentUserId",
                     RestaurantId: location.href.substr(location.href.lastIndexOf('/') + 1)
                 }
             }).done(function () {
+                updateRatingAndPriceLevel();
                 buildTable();
                 document.getElementById("addReviewContent").value = "";
                 document.getElementById("addReviewStars").value = "";
+                document.getElementById("addReviewPrice").value = "";
                 contentMessage.hidden = true;
-                ratingMessage.hidden = true;
+                starsMessage.hidden = true;
+                priceMessage.hidden = true;
+
             });
         };
 
         $('#addReview').click(function () {
             contentMessage.hidden = true;
-            ratingMessage.hidden = true;
+            starsMessage.hidden = true;
+            priceMessage.hidden = true;
+
             if ((!(document.getElementById("addReviewContent") && document.getElementById("addReviewContent").value))
-                || (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value))) {
-                if ((!(document.getElementById("addReviewContent") && document.getElementById("addReviewContent").value))
-                    && (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value))) {
-                    contentMessage.hidden = false;
-                    ratingMessage.hidden = false;
-                }
-                else if (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value)) {
-                    ratingMessage.hidden = false;
-                }
-                else {
+                || (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value))
+                || (!(document.getElementById("addReviewPrice") && document.getElementById("addReviewPrice").value))) {
+
+                if (!(document.getElementById("addReviewContent") && document.getElementById("addReviewContent").value)) {
                     contentMessage.hidden = false;
                 }
-            }
-            else {
+                if (!(document.getElementById("addReviewStars") && document.getElementById("addReviewStars").value)) {
+                    starsMessage.hidden = false;
+                }
+                if (!(document.getElementById("addReviewPrice") && document.getElementById("addReviewPrice").value)) {
+                    priceMessage.hidden = false;
+                }
+            } else {
                 createNewReview();
             }
+
         });
 
         function buildTable() {
+            var jsonOfReviews;
             $.ajax({
-                url: "/Reviews/IndexOfRestaurant/" + location.href.substr(location.href.lastIndexOf('/') + 1),
-                success: function (result) {
+                url: "/Reviews/ReviewsOfRestaurant/" + location.href.substr(location.href.lastIndexOf('/') + 1),
+                success: function (data) {
+                    jsonOfReviews = JSON.stringify(data);
+                    jsonOfReviews = JSON.parse(jsonOfReviews);
+
                     var deleteBtns = document.getElementsByClassName('reviewDelete');
                     var editBtns = document.getElementsByClassName('reviewEdit');
+
                     reviewsBody.innerHTML = "";
-                    for (var i = 0; i < result.length; i++) {
-                        var starsHtml = "";
+
+                    var editAndDeleteHtml;
+                    var editReviewHtml;
+                    var deleteReviewHtml;
+                    var currUserPhotoHtml = "<img height='70px' src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTKRCfg2xIu9yLGDGiAXcw56FM5zjIvvCPsfQ&usqp=CAU' /><br/>"
+                    var currUserName = "";
+
+                    function getUserName(userId, currReviewId) {
+                        var currUsernameHtmlId = "currUserNameHtml";
+                        $.post({
+                            url: "/Reviews/GetUserName",
+                            data: {
+                                UserId: userId
+                            }
+                        }).done(function (userName) {
+                            currUserName = (JSON.stringify(userName)).substr(1, (JSON.stringify(userName)).length - 2);
+                            currUsernameHtmlId += currReviewId;
+                            var currUsernameHtml = document.getElementById(currUsernameHtmlId);
+                            currUsernameHtml.innerHTML = currUserName;
+                        });
+                    };
+
+                    for (var i = 0; i < jsonOfReviews.length; i++) {
+                        var currReviewId = (jsonOfReviews[i].id).toString();
+                        var currReviewContent = jsonOfReviews[i].content;
+                        var currReviewStars = jsonOfReviews[i].stars;
+                        var currReviewPrice = jsonOfReviews[i].price;
+
                         var editAndDeleteHtml = "";
                         var editReviewHtml = "";
-                        var currReviewId = (result[i].id).toString();
-                        var currReviewContent = result[i].content;
-                        var currReviewStars = result[i].stars;
-                        if (result[i].userId == "@currenrUserId") {
+                        var deleteReviewHtml = "";
+
+                        if ("@isManager".toString() == "True") {
+                            editAndDeleteHtml =
+                                "<br/><button type='submit' class='btn reviewDelete' id='reviewDelete" + currReviewId + "'><i class='material-icons'>delete</i></button>";
+
+                            deleteReviewHtml =
+                                "<div hidden class='deleteDiv' id='deleteDiv" + currReviewId + "'><br/>" +
+                                "<b><span class='text-danger'>Are you sure yow want <br/> to delete this comment ? </span></b><br/>" +
+                                "<input type='submit' value='Yes' class='btn yesDeleteReview'/>" +
+                                " | <input type='submit' value='No' class='btn noDeleteReview'/></div>";
+                        };
+                        if (jsonOfReviews[i].userId == "@currentUserId") {
 
                             editAndDeleteHtml =
-                            "<input type='submit' value='Edit' class='btn reviewEdit' id='reviewEdit" + currReviewId + "'/> | " +
-                            "<input type='submit' value='Delete' class='btn reviewDelete' id='reviewDelete" +currReviewId + "'/>" +
-                            "<div hidden class='deleteDiv' id='deleteDiv" + currReviewId + "'><br/>" +
-                            "<b><span class='text-danger'>Are you sure yow want <br/> to delete this comment ? </span></b><br/>" +
-                            "<input type='submit' value='Yes' class='btn yesDeleteReview'/>" +
-                            " | <input type='submit' value='No' class='btn noDeleteReview'/></div>";
+                                "<br/><button type='submit' class='btn reviewEdit' id='reviewEdit" + currReviewId + "'><i class='material-icons'>edit</i></button> | " +
+                                "<button type='submit' class='btn reviewDelete' id='reviewDelete" + currReviewId + "'><i class='material-icons'>delete</i></button>";
 
                             editReviewHtml =
-                            "<br/><div hidden class='editDiv' id='editDiv" + currReviewId + "'><h4>Edit Review</h4>" +
-                            "<div><textarea class='form-control' id='editContent" + currReviewId + "' maxlength='100' value='" + currReviewContent +
-                            "' placeholder='" + currReviewContent + "' ></textarea ></div><br/>" +
-                            "<div> <select class='form-control' id='editStars" + currReviewId + "'>" +
-                            "<option value=" + currReviewStars + " disabled selected>" + currReviewStars +
-                            "</option><option value='5'>5 Excellent</option>" +
-                            "<option value='4'>4 Above Average</option><option value='3'>3 Average</option>" +
-                            "<option value='2'>2 Below Average</option><option value='1'>1 Poor</option></select></div><br/>" +
-                            "<div><input type='submit' value='Submit Edited Review' class='btn editReview' id='editReview" + currReviewId + "'/></div></div>";
+                                "<br/><div hidden class='editDiv' id='editDiv" + currReviewId + "'><h4>Edit Review</h4>" +
+                                "<div><textarea class='form-control' id='editContent" + currReviewId + "' maxlength='100' value='" + currReviewContent +
+                                "' style='resize: none;' rows='4'>" + currReviewContent + "</textarea ></div><br/>" +
+                                "<div><select class='form-control' id='editStars" + currReviewId + "'>" +
+                                "<option value=" + currReviewStars + " disabled selected> Rating (From 1 to 5): " + currReviewStars +
+                                "</option><option value='5'>5 Excellent</option>" +
+                                "<option value='4'>4 Above Average</option><option value='3'>3 Average</option>" +
+                                "<option value='2'>2 Below Average</option><option value='1'>1 Poor</option></select></div><br/>" +
+                                "<div><select class='form-control' id='editPrice" + currReviewId + "'>" +
+                                "<option value=" + currReviewPrice + " disabled selected> Price (From 1 to 5): " + currReviewPrice +
+                                "</option><option value='5'>5 Too Expensive</option>" +
+                                "<option value='4'>4 Pretty Expensive</option><option value='3'>3 Average</option>" +
+                                "<option value='2'>2 Pretty Cheap</option><option value='1'>1 Very Cheap</option></select></div><br/>" +
+                                "<div><input type='submit' value='Submit Edited Review' class='btn editReview' id='editReview" + currReviewId + "'/></div></div>";
+
+                            deleteReviewHtml =
+                                "<div hidden class='deleteDiv' id='deleteDiv" + currReviewId + "'><br/>" +
+                                "<b><span class='text-danger'>Are you sure yow want <br/> to delete this comment ? </span></b><br/>" +
+                                "<input type='submit' value='Yes' class='btn yesDeleteReview'/>" +
+                                " | <input type='submit' value='No' class='btn noDeleteReview'/></div>";
                         };
 
-                        const fullStar = "<i class='material-icons'>star</i>";
-                        const emptyStar = "<i class='material-icons'>star_border</i>";
+                        reviewsBody.innerHTML += "<tr><td style='text-align:center; vertical-align: middle;'>" + currUserPhotoHtml +
+                            "<div id='currUserNameHtml" + currReviewId + "'> </div></td><td>" +
+                            (jsonOfReviews[i].date).toString().slice(0, 10) + "<br/>" +
+                            "<b>" + currReviewContent + "</b><br/>" +
+                            drawStars(jsonOfReviews[i].stars) + "<br/>" + drawPrice(jsonOfReviews[i].price) + editAndDeleteHtml +
+                            "</td></tr><tr hidden id='hiddenTr" + currReviewId + "'><td colspan='2'>" +
+                            editReviewHtml + deleteReviewHtml + "</td></tr>";
 
-                        var starsHtml = fullStar.repeat(result[i].stars) + emptyStar.repeat(5 - result[i].stars);
-                        
-                        reviewsBody.innerHTML = reviewsBody.innerHTML + "<tr><td>" + result[i].user.username +
-                            "</td><td>" + result[i].content +
-                            "</td><td>" + starsHtml +
-                            "</td><td>" + (result[i].date).toString().slice(0, 10) +
-                            "</td><td>" + editAndDeleteHtml +
-                            "</td><td>" + editReviewHtml + "</td></tr>";
+                        getUserName((jsonOfReviews[i].userId), currReviewId);
 
                     };
 
@@ -251,36 +351,44 @@
                         var editDivId = "editDiv" + currReviewId;
                         var editDiv = document.getElementById(editDivId);
                         editDiv.hidden = false;
+                        var hiddenTrId = "hiddenTr" + currReviewId;
+                        var hiddenTr = document.getElementById(hiddenTrId);
+                        hiddenTr.hidden = false;
 
                         $('.editReview').click(function () {
                             currReviewId = (this.id).toString().slice(10, 14);
                             var editReviewContentId = "editContent" + currReviewId;
                             var editReviewContent = (document.getElementById(editReviewContentId)).value;
                             var editReviewCStarsId = "editStars" + currReviewId;
-                            var editReviewCStars = (document.getElementById(editReviewCStarsId)).value;
+                            var editReviewCStars = ((document.getElementById(editReviewCStarsId)).value).toString();
+                            var editReviewCPriceId = "editPrice" + currReviewId;
+                            var editReviewCPrice = ((document.getElementById(editReviewCPriceId)).value).toString();
                             if (editReviewContent == "") {
-                                for (var i = 0; i < result.length; i++) {
-                                    if (currReviewId == result[i].id) {
-                                        editReviewContent = result[i].content;
+                                for (var i = 0; i < jsonOfReviews.length; i++) {
+                                    if (currReviewId == jsonOfReviews[i].id) {
+                                        editReviewContent = jsonOfReviews[i].content;
                                     };
                                 };
                             };
 
                             $.post({
-                                url: "/Reviews/Edit/" + currReviewId,
+                                url: "/Reviews/edit",
                                 data: {
                                     Id: currReviewId,
                                     Content: editReviewContent,
                                     Stars: editReviewCStars,
-                                    UserId: "@currenrUserId",
+                                    Price: editReviewCPrice,
+                                    UserId: "@currentUserId",
                                     RestaurantId: location.href.substr(location.href.lastIndexOf('/') + 1)
                                 }
                             }).done(function () {
                                 editDiv.hidden = true;
+                                hiddenTr.hidden = true;
                                 for (var i = 0; i < editBtns.length; i++) {
                                     deleteBtns[i].disabled = false;
                                     editBtns[i].disabled = false;
                                 };
+                                updateRatingAndPriceLevel();
                                 buildTable();
                             });
                         });
@@ -297,9 +405,13 @@
                         var deleteDivId = "deleteDiv" + currReviewId;
                         var deleteDiv = document.getElementById(deleteDivId);
                         deleteDiv.hidden = false;
+                        var hiddenTrId = "hiddenTr" + currReviewId;
+                        var hiddenTr = document.getElementById(hiddenTrId);
+                        hiddenTr.hidden = false;
 
                         $('.noDeleteReview').click(function () {
                             deleteDiv.hidden = true;
+                            hiddenTr.hidden = true;
                             for (var i = 0; i < deleteBtns.length; i++) {
                                 deleteBtns[i].disabled = false;
                                 editBtns[i].disabled = false;
@@ -308,16 +420,15 @@
 
                         $('.yesDeleteReview').click(function () {
                             $.post({
-                                url: "/Reviews/Delete/" + currReviewId,
+                                url: "/Reviews/Delete",
                                 data: {
                                     id: currReviewId
                                 }
                             }).done(function () {
+                                deleteDiv.hidden = true;
+                                hiddenTr.hidden = true;
+                                updateRatingAndPriceLevel();
                                 buildTable();
-                                //document.getElementById("addReviewContent").value = "";
-                                //document.getElementById("addReviewStars").value = "";
-                                //contentMessage.hidden = true;
-                                //ratingMessage.hidden = true;
                             });
                         });
 
@@ -325,6 +436,7 @@
                 }
             });
         };
+        buildTable();
 
     });
 </script>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestaurantRating.Data;
 using RestaurantRating.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantRating.Controllers
 {
@@ -28,7 +29,7 @@ namespace RestaurantRating.Controllers
             var RestrauntsByCityJSON = JsonConvert.SerializeObject(RestrauntsByCity);
             ViewData["RestrauntsByCityJSON"] = RestrauntsByCityJSON;
 
-            var RestrauntsByReviews = _context.Review.GroupBy(r => r.RestaurantId).Select(g => new { review = g.Key.ToString(), count = g.Count() }).ToList();
+            var RestrauntsByReviews = _context.Review.Include(o => o.Restaurant).GroupBy(r => r.Restaurant.Name).Select(g => new { restaurant = g.Key.ToString(), count = g.Count() }).ToList();
             var RestrauntsByReviewsJSON = JsonConvert.SerializeObject(RestrauntsByReviews);
             ViewData["RestrauntsByReviewsJSON"] = RestrauntsByReviewsJSON;
             var connected_claim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid);

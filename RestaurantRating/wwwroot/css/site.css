@@ -9,7 +9,6 @@
     font-weight: bold;
     text-align: center;
 }
-
 #canvas-logo {
     -webkit-transition: -webkit-transform .8s ease-in-out;
     transition: transform .8s ease-in-out;

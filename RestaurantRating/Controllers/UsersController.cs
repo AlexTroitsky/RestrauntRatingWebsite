@@ -92,8 +92,6 @@ namespace RestaurantRating.Models
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,Password,Address,Lat,Lon")] User user)
@@ -104,7 +102,7 @@ namespace RestaurantRating.Models
             }
             else
             {
-                user.UserType = UserType.Reveiwer;
+                user.UserType = UserType.Reviewer;
                 ModelState.Remove(nameof(user.UserType));
                 if (ModelState.IsValid)
                 {
@@ -135,8 +133,6 @@ namespace RestaurantRating.Models
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -170,28 +166,10 @@ namespace RestaurantRating.Models
             return View(user);
         }
 
-        // GET: Users/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
         // POST: Users/Delete/5
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -204,6 +182,20 @@ namespace RestaurantRating.Models
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        // POST: Users/MakeUserAdmin
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("ChangeType")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeType(int id, UserType userType)
+        {
+            var user = await _context.User.FindAsync(id);
+            user.UserType = userType;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

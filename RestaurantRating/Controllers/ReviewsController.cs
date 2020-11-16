@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using RestaurantRating.Data;
-//using RestaurantRating.Migrations;
 using RestaurantRating.Models;
 using System.Security.Claims;
 
@@ -30,10 +29,10 @@ namespace RestaurantRating.Controllers
         }
 
         // GET: ReviewsOfRestaurant
-        public async Task<IActionResult> IndexOfRestaurant(int id)
+        public async Task<IActionResult> ReviewsOfRestaurant(int id)
         {
             var reviews = await _context.Review
-                .Where(r => r.RestaurantId == id).Include(r => r.User)
+                .Where(r => r.RestaurantId == id)
                 .ToListAsync();
                 return Json(reviews);
         }
@@ -68,7 +67,6 @@ namespace RestaurantRating.Controllers
         {
             Restaurant restaurant = _context.Restaurant.Find(id);
             ViewBag.restaurant = restaurant;
-            //ViewBag.Restaurants = new SelectList(_context.Restaurant.ToList(), "Id", "Name");
             Review review = new Review();
             review.Restaurant = restaurant;
             return View(review);
@@ -80,14 +78,18 @@ namespace RestaurantRating.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
+        public async Task<IActionResult> Create([Bind("Id,Content,Stars,Price,UserId,RestaurantId")] Review review)
         {
             if (ModelState.IsValid)
             {
+                var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
                 review.Date = DateTime.Now;
-                review.Restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
-                review.User = _context.User.First(u => u.Id == review.UserId);
                 _context.Add(review);
+                List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+                reviews.Add(review);
+                restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+                _context.Update(restaurant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -114,7 +116,8 @@ namespace RestaurantRating.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,UserId,RestaurantId")] Review review)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Stars,Price,UserId,RestaurantId")] Review review)
         {
             if (id != review.Id)
             {
@@ -126,6 +129,12 @@ namespace RestaurantRating.Controllers
                 try
                 {
                     _context.Update(review);
+                    var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
+                    List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+                    reviews.Add(review);
+                    restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                    restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+                    _context.Update(restaurant);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -163,11 +172,20 @@ namespace RestaurantRating.Controllers
         }
 
         // POST: Reviews/Delete/5
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             var review = await _context.Review.FindAsync(id);
             _context.Review.Remove(review);
+            var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
+            List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+            if (reviews.Count > 0)
+            {
+                restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+            }
+            _context.Update(restaurant);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

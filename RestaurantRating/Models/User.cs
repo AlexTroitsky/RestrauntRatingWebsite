@@ -10,7 +10,7 @@ namespace RestaurantRating.Models
 {
     public enum UserType {
         Admin,
-        Reveiwer
+        Reviewer
     }
     public class User
     {

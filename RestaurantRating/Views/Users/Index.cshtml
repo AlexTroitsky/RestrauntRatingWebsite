@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<RestaurantRating.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Details";
+    var currentUserId = Context.User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Sid)?.Value;
 }
 
 <div class="box" style="align-content: center">
@@ -9,69 +10,137 @@
     <hr />
     <div class="row">
         <h class="intro-text text-center col-md-2 col-md-offset-5">
-            <strong>Users</strong>
-            <h>List</h>
+            <h4> Users</h4>
         </h>
-
-<aside class="text-right col-md-2 col-md-offset-2">
-    <i class="fa fa-user-plus"></i>
-    @Html.ActionLink("Create New", "Create")
-</aside>
+    </div>
+    <hr />
+    <div class="row">
+        <form class="form-inline" asp-action="Search">
+            <div class="form-group col-md-2 col-md-offset-3">
+                <input name="Username" class="form-control" placeholder="Username" />
+            </div>
+            <div class="form-group col-md-2">
+                <select class="form-control" name="UserType" asp-items="Html.GetEnumSelectList<UserType>()">
+                    <option value="" selected>User Type</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
     <hr />
 
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Username)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Password)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UserType)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-
-
-            <form class="form-inline" asp-action="Search">
-                <div class="form-group col-md-2 col-md-offset-3">
-                    <input name="Username" class="form-control" placeholder="Username" />
+    <div class="row">
+        @foreach (var user in Model)
+        {
+            <div class="col-sm-4">
+                <div class="card small" style='height:500px; border-radius: 20px; text-align:center; font-size: 20px; background-color:white' id="user{@user.Id}">
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn-floating halfway-fab waves-effect waves-light btn-sm"><i class="material-icons">edit</i></a>
+                    <br />
+                    <img height="70px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTKRCfg2xIu9yLGDGiAXcw56FM5zjIvvCPsfQ&usqp=CAU" />
+                    <br />
+                    <b>@user.Username</b>
+                    <br />
+                    <div style='font-size: 12px;'>User Name</div>
+                    <br />
+                    @user.Password
+                    <br />
+                    <div style='font-size: 12px;'>Password</div>
+                    <br />
+                    @user.UserType.ToString()
+                    <div style='font-size: 12px;'>User Type</div>
+                    <br />
+                    <div style='font-size: 15px;'>
+                        @user.Address
+                    </div>
+                    <div style='font-size: 12px;'>Address</div><br />
+                    <br />
+                    @if (!user.Id.ToString().Equals(currentUserId))
+                    {
+                        <button type='submit' class='btn user-action deleteUserButton'>
+                            <i class='material-icons'>delete</i>
+                        </button>
+                        <span> | </span>
+                        if (user.UserType == UserType.Admin)
+                        {
+                            <button type='submit' class='btn user-action changeUserType'>Set as reviewer</button><br />
+                            <div hidden class='confirmChangeType'>
+                                <b><span style='font-size:14px;' class='text-danger'>Are you sure yow want to modify this user ? </span></b>
+                                <br />
+                                <form method="post" asp-action="ChangeType" asp-route-id="@user.Id">
+                                    <input hidden value="@UserType.Reviewer" name="UserType" />
+                                    <input type="submit" value="Yes" class="btn" /> |
+                                    <button type="button" class="btn noChangeType">No</button>
+                                </form>
+                                <br />
+                                <br />
+                            </div>
+                        }
+                        else
+                        {
+                            <button type='submit' class='btn user-action changeUserType'>Set as admin</button>
+                            <br />
+                            <div hidden class='confirmChangeType'>
+                                <b><span style='font-size:14px;' class='text-danger'>Are you sure yow want to modify this user ? </span></b>
+                                <br />
+                                <form method="post" asp-action="ChangeType" asp-route-id="@user.Id">
+                                    <input hidden value="@UserType.Admin" name="UserType"/>
+                                    <input type="submit" value="Yes" class="btn" /> |
+                                    <button type="button" class="btn noChangeType">No</button>
+                                </form>
+                                <br />
+                                <br />
+                            </div>
+                        }
+                        <div hidden class='confirmDelete'>
+                            <b><span style='font-size:14px;' class='text-danger'>Are you sure yow want to delete this user ? </span></b>
+                            <br />
+                            <form method="post" asp-action="Delete" asp-route-id="@user.Id">
+                                <input type="submit" value="Yes" class="btn" /> |
+                                <button type="button" class="btn noDeleteUser">No</button>
+                            </form>
+                            <br />
+                        </div>
+                        <br />
+                        }
+                    </div>
                 </div>
-                <div class="form-group col-md-2">
-                    <select class="form-control" name="UserType" asp-items="Html.GetEnumSelectList<UserType>()">
-                        <option value="" selected>User Type</option>
-                    </select>
+        }
+        <a asp-action="Create">
+            <div class='col-sm-4'>
+                <div class='card small' style='height:110px; border-radius: 20px; text-align:center; font-size: 20px; background-color:white' id='createUserButton'>
+                    <br />
+                    <i class='fa fa-user-plus'></i>
+                    <br />
+                    <b>Create User</b>
                 </div>
-                <div class="form-group col-md-2">
-                    <input type="submit" value="Search" class="btn btn-primary" />
-                </div>
-            </form>
-
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Username)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Password)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserType)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            </div>
+        </a>
     </div>
 </div>
+
+<script>
+    $(document).ready(() => {
+        $('.deleteUserButton').click(function () {
+            Array.from(document.getElementsByClassName('user-action')).forEach(i => i.disabled = true);
+            $(this).siblings('.confirmDelete')[0].hidden = false;
+
+            $('.noDeleteUser').click(function () {
+                $(this).parents('.confirmDelete')[0].hidden = true;
+                Array.from(document.getElementsByClassName('user-action')).forEach(i => i.disabled = false);
+            });
+        });
+
+        $('.changeUserType').click(function () {
+            Array.from(document.getElementsByClassName('user-action')).forEach(i => i.disabled = true);
+            $(this).siblings('.confirmChangeType')[0].hidden = false;
+            
+            $('.noChangeType').click(function () {
+                $(this).parents('.confirmChangeType')[0].hidden = true;
+                Array.from(document.getElementsByClassName('user-action')).forEach(i => i.disabled = false);
+            });
+        });
+    });
+</script>
+

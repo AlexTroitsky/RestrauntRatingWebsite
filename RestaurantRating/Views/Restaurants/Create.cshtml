@@ -10,32 +10,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" autocomplete="off"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" autocomplete="off"/>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PriceLevel" class="control-label"></label>
-                <input asp-for="PriceLevel" class="form-control" />
-                <span asp-validation-for="PriceLevel" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input id="adress-autocomplete" asp-for="Address" class="form-control" placeholder="" />
+                <input id="adress-autocomplete" asp-for="Address" class="form-control" placeholder="" autocomplete="off"/>
                 <input id="adress-city" hidden asp-for="City"/>
                 <input id="adress-coordinates-lat" hidden asp-for="Lat"/>
                 <input id="adress-coordinates-lon" hidden asp-for="Lon" />
                 <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ImageFile" class="control-label"></label>
