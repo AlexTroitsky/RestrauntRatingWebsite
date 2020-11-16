@@ -11,7 +11,8 @@ namespace RestaurantRating.Migrations
                 name: "Restaurant",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     PriceLevel = table.Column<int>(nullable: false),
@@ -31,7 +32,8 @@ namespace RestaurantRating.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
                     UserType = table.Column<int>(nullable: false),
@@ -48,7 +50,8 @@ namespace RestaurantRating.Migrations
                 name: "Review",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(maxLength: 100, nullable: false),
                     Stars = table.Column<int>(nullable: false),
                     Price = table.Column<int>(nullable: false),

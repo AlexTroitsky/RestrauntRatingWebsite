@@ -11,7 +11,6 @@ namespace RestaurantRating.Models
 {
     public class Restaurant
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
