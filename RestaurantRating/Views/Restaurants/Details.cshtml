@@ -19,11 +19,14 @@
             </td>
         </tr>
         <tr>
+
             <td rowspan="2" style="text-align: center;">
                 @{
-                    var base64 = Convert.ToBase64String(Model.Image);
+                    String src = (Model.Image == null) ? "../../images/Logo.png" : "data:image / png; base64," + Convert.ToBase64String(Model.Image);
                 }
-                <img height="500" src="data:image/png;base64,@base64" />
+
+
+                <img height="500" src="@src" runat="server"/>
             </td>
             <td>
                 <b>@Html.DisplayFor(model => model.Description)</b>

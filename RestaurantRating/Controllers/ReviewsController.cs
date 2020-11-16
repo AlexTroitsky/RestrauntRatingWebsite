@@ -67,7 +67,6 @@ namespace RestaurantRating.Controllers
         {
             Restaurant restaurant = _context.Restaurant.Find(id);
             ViewBag.restaurant = restaurant;
-            //ViewBag.Restaurants = new SelectList(_context.Restaurant.ToList(), "Id", "Name");
             Review review = new Review();
             review.Restaurant = restaurant;
             return View(review);
@@ -83,10 +82,14 @@ namespace RestaurantRating.Controllers
         {
             if (ModelState.IsValid)
             {
+                var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
                 review.Date = DateTime.Now;
-                review.Restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
-                review.User = _context.User.First(u => u.Id == review.UserId);
                 _context.Add(review);
+                List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+                reviews.Add(review);
+                restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+                _context.Update(restaurant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -126,6 +129,12 @@ namespace RestaurantRating.Controllers
                 try
                 {
                     _context.Update(review);
+                    var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
+                    List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+                    reviews.Add(review);
+                    restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                    restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+                    _context.Update(restaurant);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -169,6 +178,14 @@ namespace RestaurantRating.Controllers
         {
             var review = await _context.Review.FindAsync(id);
             _context.Review.Remove(review);
+            var restaurant = _context.Restaurant.First(r => r.Id == review.RestaurantId);
+            List<Review> reviews = _context.Review.Where(dBreview => dBreview.RestaurantId == review.RestaurantId).ToList();
+            if (reviews.Count > 0)
+            {
+                restaurant.PriceLevel = (int)Math.Round(reviews.Average(review => review.Price));
+                restaurant.Rating = (int)Math.Round(reviews.Average(review => review.Stars));
+            }
+            _context.Update(restaurant);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

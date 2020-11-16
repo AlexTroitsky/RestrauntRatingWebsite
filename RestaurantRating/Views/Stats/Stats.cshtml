@@ -3,6 +3,11 @@
     ViewBag.Title = "Stats";
 }
 <div class="col-md-5">
+    <style>
+        .text_white {
+            stroke: white;
+        }
+    </style>
 
 <div class="stat-chart" id="statistics-pie">
     <p>Restraunts By City</p>
@@ -62,7 +67,7 @@
           .on("mouseover", function (d) {
               d3.select('#tooltip')
                 .style("visibility", "visible")
-                  .text(d.data.store);
+                  .text(d.data.city);
           })
           .on("mousemove", function () {
               d3.select('#tooltip')
@@ -87,7 +92,7 @@
               return "translate(" + arc.centroid(d) + ")"; // get the center point of the shape
           })
           .attr("text-anchor", "middle")
-          .attr("fill", "wheat")
+          .attr("fill", "white")
           .text(function (d) {
               return d.value;
           });
@@ -116,6 +121,7 @@
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
+                .attr('class', 'text_white')
                 .attr("transform",
                     "translate(" + margin.left + "," + margin.top + ")");
             // Scale the range of the data in the domains
@@ -136,7 +142,7 @@
             // add the x Axis
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .attr("fill", "wheat")
+                .attr('class', 'text_white')
                 .call(d3.axisBottom(x));
 
             // add the y Axis
@@ -146,7 +152,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("y", 6)
                 .attr("dy", "-35px")
-                .attr("fill", "wheat")
+                .attr('class', 'text_white')
                 .text("Reviews");
         }
 
